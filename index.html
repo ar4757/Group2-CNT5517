@@ -1,0 +1,37 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>IOT IDE</title>
+  <meta name="description" content="IOT IDE">
+  <meta name="author" content="Group2">
+
+  <link rel="stylesheet" type="text/css" href="css/tabby-ui.min.css">
+  <script src="js/tabby.polyfills.min.js"></script>
+
+</head>
+
+<body>
+
+<!--Sets up the tabs-->
+<ul data-tabs>
+	<li><a data-tabby-default href="#things">Things</a></li>
+	<li><a href="#services">Services</a></li>
+	<li><a href="#relationships">Relationships</a></li>
+	<li><a href="#apps">Apps/Recipes</a></li>
+</ul>
+
+<!--Contents of each tab-->
+<div id="things">Loading things...</div>
+<div id="services">...</div>
+<div id="relationships">...</div>
+<div id="apps">...</div>
+
+<script>
+	var tabs = new Tabby('[data-tabs]');
+</script>
+
+</body>
+</html>
