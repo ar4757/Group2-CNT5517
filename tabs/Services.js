@@ -9,7 +9,7 @@
  */
 let Service = {
     thing: null,
-    // todo
+    // todo:
 }
 
 /**
