@@ -2,11 +2,13 @@
  The Things tab includes info about each thing
  **/
 
+import {Identity_Thing_list} from "../js/parseTweets"
+
 /**
  * get info for all things
  * @param   {?}    ?
- * @returns {?}    info for all things
+ * @returns {?}    info of all things
  */
-const getInfo = (param) => {
+const getInfo = () => {
 
 };

@@ -4,33 +4,15 @@
  Each service presented under this tab should contain an identity of its owner thing.
  **/
 
-/**
- a prototype defines a service
- */
-let Service = {
-    thing: null,
-    // todo:
-}
+import {Services_list} from "../js/parseTweets"
 
-/**
- A list contains all services
- */
-services = []
 
-/**
- * parse services into Service instances and add to the list
- * @param   {?}
- * @returns {?}
- */
-const parseServices = (param) => {
-
-};
 
 /**
  * filter services that belong to certain things
- * @param   {list} a list of things whose services will be displayed
- * @returns {list} a list of services that will be displayed
+ * @param   {list} a list of things id
+ * @returns {list} a list of services that will be displayed under service tab
  */
-const filter = (things) => {
-
+const getFilteredServices = (things_id_to_display) => {
+    return Services_list.filter(service => things_id_to_display[service["Thing ID"]] > -1);
 };
