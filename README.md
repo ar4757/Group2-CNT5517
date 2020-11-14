@@ -16,5 +16,6 @@ Start the backend (on pi) with: node nodeserver.js
 
 Start the website server if apache is not running (on pi) with: sudo service apache2 restart
 
+(Optional) Run the Atlas thing architecture to generate tweets of your own
 
 Access the site on your computer at http://10.254.254.64/
