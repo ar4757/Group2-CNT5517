@@ -9,7 +9,9 @@ Dependencies (install on raspberry pi):
 - sudo apt-get install apache2
 
 
-Unzip all of this repo's files into raspberry pi's /var/www/html/ folder
+cd into raspberry pi's /var/www folder, delete the existing html folder and run: git clone https://github.com/ar4757/Group2-CNT5517.git html 
+
+to copy this repo's files into raspberry pi's /var/www/html/ folder. This will allow you to work on the project on your raspberry pi and commit changes from there.
 
 
 Start the backend (on pi) with: node nodeserver.js
