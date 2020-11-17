@@ -37,7 +37,7 @@ function move() {
 			loadingBlockade.style.zIndex = "-1";
 		} else {
 			//Increment by 0.05 every 10 milliseconds. This means the bar will fill after 20 seconds
-			width += 0.05;
+			width += 0.025;
 			elem.style.width = width + "%";
 		}
 		}

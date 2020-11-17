@@ -30,8 +30,8 @@ app.get('/tweets', function(req, res) {
 	tweet_array.push(JSON.parse(message));
 	});
 
-	//Currently wait 20 seconds, but really need more time to guarantee getting all tweets
-	const tweetFetchTime = 20000;
+	//Wait 40 seconds to load tweets
+	const tweetFetchTime = 40000;
 	setTimeout(function() {
 		res.json(tweet_array);
 	}, tweetFetchTime);
