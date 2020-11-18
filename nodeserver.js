@@ -26,8 +26,11 @@ app.get('/tweets', function(req, res) {
 	});
 
 	socket.on("message", function(message, rinfo) {
-    	console.info(`Tweet from: ${rinfo.address}:${rinfo.port} - ${message}`);
-	tweet_array.push(JSON.parse(message));
+		//Replace invalid json from atlas with corrected escaped quotes
+		var messageFormatted = message.toString().replace(/\["([A-z0-9]*)"/, "[\\\"$1\\\"");
+		messageFormatted = messageFormatted.replace(/\("([A-z0-9]*)"/, "(\\\"$1\\\"");
+		console.info(`Tweet from: ${rinfo.address}:${rinfo.port} - ${messageFormatted}`);
+	tweet_array.push(JSON.parse(messageFormatted));
 	});
 
 	//Wait 40 seconds to load tweets
