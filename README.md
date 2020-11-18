@@ -1,23 +1,40 @@
 # Group2-CNT5517
 
-Dependencies (install on raspberry pi):
+Dependencies (install on raspberry pi)
+```javascript
+sudo apt-get nodejs
+sudo apt-get npm
+sudo apt-get install apache2
+```
 
-- sudo apt-get nodejs
+Cloning the repo
+```javascript
+cd /var/www
+rm -rf html
+git clone https://github.com/ar4757/Group2-CNT5517.git html
+```
 
-- sudo apt-get npm
+Running:
 
-- sudo apt-get install apache2
+Run the Atlas thing architecture
+```javascript
+./Atlas
+```
 
+Connect to the smart space and add the multicast IP routing
+```javascript
+sudo systemctl start openvpn-client@vss
+sudo ip route add 232.0.0.0/8 dev tap0
+```
 
-cd into raspberry pi's /var/www folder, delete the existing html folder and run: git clone https://github.com/ar4757/Group2-CNT5517.git html 
+Start the backend
+```javascript
+node nodeserver.js
+```
 
-to copy this repo's files into raspberry pi's /var/www/html/ folder. This will allow you to work on the project on your raspberry pi and commit changes from there.
-
-
-Start the backend (on pi) with: node nodeserver.js
-
-Start the website server if apache is not running (on pi) with: sudo service apache2 restart
-
-(Optional) Run the Atlas thing architecture to generate tweets of your own
+Start the website server if apache is not running (on pi)
+```javascript
+sudo service apache2 restart
+```
 
 Access the site on your computer at http://10.254.254.64/
