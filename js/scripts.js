@@ -1,5 +1,19 @@
 //Not yet working, but the goal is to load all of our group's tweets here
 //We will use them to fill out our tabs with the data we receive
+
+/*What remains to be done:
+1. Recipe tab should open some kind of text area, that allows the user to drop 
+services and relationships into the current app.
+2. Implement a local directory system that contains the files for an app.
+3. Possibly move the app listing to a tab, and resize the text editor size.
+4. Allow the textview window to change between files in the same directory.
+5. Link buttons with their functions, this is done for some buttons already.
+6. Add clear operation for the recipes tab.
+7. Add images?
+
+*/
+
+
 function load() {
 	move();
 
@@ -43,3 +57,57 @@ function move() {
 		}
 	}
 }
+
+function updateServices(){
+	//will need to parse the Services_list object to get needed info.
+	var elem = getElementById("services-list");
+	elem.innerHtml = vals.Services_list.to_String();
+}
+
+function updateThings(){
+	var elem = getElementById("things-list");
+	elem.innerHtml = vals.Identity_Thing_list.to_String();
+}
+
+function updateRelationships(){
+	var elem = getElementById("relationships-list");
+	elem.innerHtml =vals.Relationship_list.to_String();
+}
+
+function updateRecipe(){
+	//this function will require the drag and drop feature.
+
+}
+
+function changeWorkingDirectory(){
+	var elems = getElementsByClassName("sub");
+	//derefence array into object
+	elems = elems[0];
+
+	//set working directory (if possible) to the path in elems.text
+	
+}
+
+function saveNewApp(){
+	//this one is tricky, and will depend on later implementation of
+	//the working directory.
+
+	//psudeo code will look something like this:
+	
+	//request name for app
+	//check that this name is valid
+	//save contents of textare(div = "ide-text") to appropriate file type in working dir
+}
+
+function deleteApp(){
+	//remove app from list of working apps.
+}
+
+function loadApp(){
+	//load app from list with given directory
+}
+
+function activateApp(){
+	//activate the currently selected app
+}
+
