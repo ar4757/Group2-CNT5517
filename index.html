@@ -35,6 +35,7 @@
     <button class="tablinks" onclick="openTab(event, 'Services')">Services</button>
     <button class="tablinks" onclick="openTab(event, 'Relationships')">Relationships</button>
     <button class="tablinks" onclick="openTab(event, 'Recipe')">Recipe</button>
+    <button class="tablinks" onclick="openTab(event, 'Apps')">Apps</button>
   </div>
 
   <!-- Tab content -->
@@ -58,55 +59,56 @@
     <p>list</p>
   </div>
 
-  <div class="w3-container w3-blue">
-    <h2>Change working directory</h2>
-</div>
+  <div id="Apps" class="tabcontent">
+    <div class="w3-container w3-blue">
+      <h2>Change working directory</h2>
+    </div>
 
-<!--Set the directory to the current path. The contents of this directory
-need be made visual and accesible somewhere else.-->
-<form class="w3-container">
-    <p>
-        <label>Directory Path</label>
-        <input class="w3-input" type="text"></p>
-        <input class="sub" type="submit" onclick="changeWorkingDirectory">
-    </p>
-</form>
-  <!-- These function need be added to js/app.js -->
-  <div class="btn-group">
-      <!--This function should only be accessible in a certain program state.-->
-    <button class="button" onclick="saveNewApp">Save</button>
+    <!--Set the directory to the current path. The contents of this directory
+    need be made visual and accesible somewhere else.-->
+    <form class="w3-container">
+        <p>
+            <label>Directory Path</label>
+            <input class="w3-input" type="text"></p>
+            <input class="sub" type="submit" onclick="changeWorkingDirectory">
+        </p>
+    </form>
+      <!-- These function need be added to js/app.js -->
+      <div class="btn-group">
+          <!--This function should only be accessible in a certain program state.-->
+        <button class="button" onclick="saveNewApp">Save</button>
 
-    <button class="button" onClick="uploadNewApp">Upload</button>
-    <button class="button" onClick="activateApp">Activate</button>
-    <button class="button" onClick="stopApp">Stop</button>
-    <button class="button" onClick="deleteApp">Delete</button>
+        <button class="button" onClick="uploadNewApp">Upload</button>
+        <button class="button" onClick="activateApp">Activate</button>
+        <button class="button" onClick="stopApp">Stop</button>
+        <button class="button" onClick="deleteApp">Delete</button>
 
+      </div>
+
+
+      <!-- Text box for adding new app in the current file. Upon clicking save,
+        a textbox should apper to name the file. -->
+      <div class="ide">
+          <textarea class="ide-text" cols="30" rows="12">
+              Begin coding here.
+          </textarea>
+        </div>
+
+
+
+        <!-- List of apps that have currently been uploaded or saved.
+            These will include 'objects' that are grabbed from a JS function. -->
+       <div class="available-app-list">
+          <p>Available apps: </p> 
+          <ol>
+            <li>Sample 1</li>
+            <li>Sample 2</li>
+            <li>Sample 3</li>
+          </ol>
+        </div>
+
+    </body>
   </div>
-
-
-  <!-- Text box for adding new app in the current file. Upon clicking save,
-    a textbox should apper to name the file. -->
-  <div class="ide">
-      <textarea class="ide-text" cols="30" rows="12">
-          Begin coding here.
-      </textarea>
-    </div>
-
-
-
-    <!-- List of apps that have currently been uploaded or saved.
-        These will include 'objects' that are grabbed from a JS function. -->
-   <div class="available-app-list">
-      <p>Available apps: </p> 
-      <ol>
-        <li>Sample 1</li>
-        <li>Sample 2</li>
-        <li>Sample 3</li>
-      </ol>
-    </div>
-
-</body>
-
 
 
 <style>
