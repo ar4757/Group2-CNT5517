@@ -35,11 +35,17 @@ function load() {
 
 	$.ajax({
 		type: 'GET',
-		url: 'http://10.254.254.64:3000/apps',
+		url: 'http://10.254.254.64:3000/getApps',
 		success: function(response) {
-		 console.log(response);
-		 //Array of app objects
-	   },
+			console.log(response);
+			//Array of app objects is in response
+			for (const [key, value] of Object.entries(response)) {
+				var appList = document.getElementById("appList");
+				var entry = document.createElement('li');
+				entry.innerHTML = key + '<br>' + value;
+				appList.appendChild(entry);
+			}
+	    },
 		error: function(xhr, status, err) {
 		  console.log(xhr.responseText);
 		}
@@ -55,7 +61,7 @@ function move() {
 		//Every 10 milliseconds update the bar
 		var id = setInterval(frame, 10);
 		function frame() {
-		//Set to 0 if doing frontend, non-tweet related code to skip the 40 second wait
+		//Set to 0 if doing frontend, non-tweet related code to skip the 40 second wait. Otherwise, 100
 		if (width >= 100) {
 			clearInterval(id);
 			i = 0;
@@ -124,14 +130,27 @@ function nameFile(){
 function finishSaveNewApp(filename){
 	//save contents of textare(div = "ide-text") to appropriate file type in working dir
 	const downloadToFile = (content, filename, contentType) => {
-  		const a = document.createElement('a');
+  		/*const a = document.createElement('a');
   		const file = new Blob([content], {type: contentType});
   
   		a.href= URL.createObjectURL(file);
   		a.download = filename;
   		a.click();
 
-		URL.revokeObjectURL(a.href);
+		URL.revokeObjectURL(a.href);*/
+		formData = {"content": content, "filename": filename, "contentType": contentType};
+		$.ajax({
+			type: 'POST',
+			url: 'http://10.254.254.64:3000/saveApp',
+			data : formData,
+			success: function(response) {
+			 console.log(response);
+			 //Array of app objects
+		   },
+			error: function(xhr, status, err) {
+			  console.log(xhr.responseText);
+			}
+		   });
 	};
 
     const textArea = document.querySelector('.ide-text');
