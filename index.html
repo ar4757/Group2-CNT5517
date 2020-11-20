@@ -9,6 +9,7 @@
   <meta name="author" content="Group2">
 
   <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="js/scripts.js"></script>
 
@@ -16,6 +17,10 @@
 
 <body>
   <!--Progress bar while starting up the application (recommended by professor)-->
+  <div class="header">
+      <h1>CIS4930-CNT5517 Group 2</h1>
+  </div>
+  
   <div id="progressBar">
     <div id="bar">Loading tweets</div>
   </div>
@@ -30,6 +35,7 @@
     <button class="tablinks" onclick="openTab(event, 'Services')">Services</button>
     <button class="tablinks" onclick="openTab(event, 'Relationships')">Relationships</button>
     <button class="tablinks" onclick="openTab(event, 'Recipe')">Recipe</button>
+    <button class="tablinks" onclick="openTab(event, 'Apps')">Apps</button>
   </div>
 
   <!-- Tab content -->
@@ -52,10 +58,147 @@
     <h3>Recipe</h3>
     <p>list</p>
   </div>
+
+  <div id="Apps" class="tabcontent">
+    <h3>Apps</h3>
+    <p>list</p>
+  </div>
 </body>
+    <div class="w3-container w3-blue">
+      <h2>Change working directory</h2>
+    </div>
+
+    <!--Set the directory to the current path. The contents of this directory
+    need be made visual and accesible somewhere else.-->
+    <form class="w3-container">
+        <p>
+            <label>Directory Path</label>
+            <input class="w3-input" type="text"></p>
+            <input class="sub" type="submit" onClick="changeWorkingDirectory()">
+        </p>
+    </form>
+      <!-- These function need be added to js/app.js -->
+      <div class="btn-group">
+          <!--This function should only be accessible in a certain program state.-->
+        <button class="button" onClick="saveNewApp()">Save</button>
+        <button class="button" onClick="uploadNewApp()">Upload</button>
+        <button class="button" onClick="activateApp()">Activate</button>
+        <button class="button" onClick="stopApp()">Stop</button>
+        <button class="button" onClick="deleteApp()">Delete</button>
+
+      </div>
+
+
+      <!-- Text box for adding new app in the current file. Upon clicking save,
+        a textbox should apper to name the file. -->
+      <div class="ide">
+          <textarea placeholder="Code goes here" class="ide-text" cols="30" rows="12"></textarea>
+        </div>
+
+      <div class="popup">
+        <div class="w3-container" id="filenamePopup">
+          <p>
+              <label>Enter File Name</label>
+              <input class="w3-input" id="fileText" type="text" value="">
+              <input class="sub" type="submit" onClick="nameFile()">
+          </p>
+        </div>
+      </div>
+
+
+
+        <!-- List of apps that have currently been uploaded or saved.
+            These will include 'objects' that are grabbed from a JS function. -->
+       <div class="available-app-list">
+          <p>Available apps: </p> 
+          <ol>
+            <li>Sample 1</li>
+            <li>Sample 2</li>
+            <li>Sample 3</li>
+          </ol>
+        </div>
+
+    </body>
+  </div>
 
 <style>
-/* Style the tab */
+/* Style the tabs on the right side */
+.tablinks{
+    border-radius: 12px;
+}
+.directory-container{
+    position:absolute;
+}
+.ide{
+    float:right;
+    padding-top: 0px;
+}
+body{
+    background-color: #ccc;
+}
+.header{
+    padding: 20px;
+    text-align: center;
+    background: #29bbff;
+    color: white;
+    font-size: 10px;
+}
+
+.btn-group{
+    float:right;
+}
+
+.btn-group .button{
+    display:block;
+    box-shadow:inset 0px -3px 7px 0px #29bbff;
+	background:linear-gradient(to bottom, #2dabf9 5%, #0688fa 100%);
+	background-color:#2dabf9;
+	border-radius:3px;
+	border:1px solid #0b0e07;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	padding:9px 23px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #263666;
+}
+
+.btn-group .button:hover {
+	background:linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);
+	background-color:#0688fa;
+}
+.btn-group .button:active {
+	position:relative;
+	top:1px;
+}
+
+.vertical-tabs{
+  float: right;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: 20%;
+  height: 300px;
+}
+
+.vertical-tabs button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+.vertical-tabs button.active {
+  background-color: #ccc;
+}
+
 .tab {
 	overflow: hidden;
 	/* border: 1px solid #ccc; */
