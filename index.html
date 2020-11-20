@@ -40,29 +40,36 @@
 
   <!-- Tab content -->
   <div id="Things" class="tabcontent">
-    <h3>Things</h3>
+    <div class="w3-container w3-blue">
+      <h3>Things</h3>
+    </div>
     <p>list</p>
   </div>
 
   <div id="Services" class="tabcontent">
-    <h3>Services</h3>
+    <div class="w3-container w3-blue">
+      <h3>Services</h3>
+    </div>
     <p>list</p>
   </div>
 
   <div id="Relationships" class="tabcontent">
-    <h3>Relationships</h3>
+    <div class="w3-container w3-blue">
+      <h3>Relationships</h3>
+    </div>
     <p>list</p>
   </div>
 
   <div id="Recipe" class="tabcontent">
-    <h3>Recipe</h3>
+    <div class="w3-container w3-blue">
+      <h3>Recipe</h3>
+    </div>
     <p>list</p>
   </div>
 
   <div id="Apps" class="tabcontent">
-    <h3>Apps</h3>
     <div class="w3-container w3-blue">
-      <h2>Change working directory</h2>
+      <h3>Apps</h3>
     </div>
 
     <!--Set the directory to the current path. The contents of this directory
@@ -70,8 +77,8 @@
     <form class="w3-container">
         <p>
             <label>Directory Path</label>
-            <input class="w3-input" type="text"></p>
-            <input class="sub" type="submit" onClick="changeWorkingDirectory()">
+            <input class="w3-input" type="text" id="directoryText" value="apps/">
+            <input class="sub" type="submit" onClick="changeWorkingDirectory(); return false;">
         </p>
     </form>
     <!-- These function need be added to js/app.js -->

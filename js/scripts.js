@@ -53,7 +53,7 @@ function move() {
 			loadingBlockade.style.opacity = "0";
 			loadingBlockade.style.zIndex = "-1";
 		} else {
-			//Increment by 0.05 every 10 milliseconds. This means the bar will fill after 20 seconds
+			//Increment by 0.05 every 10 milliseconds. This means the bar will fill after 40 seconds
 			width += 0.025;
 			elem.style.width = width + "%";
 		}
@@ -67,6 +67,11 @@ function updateApps(){
 		url: 'http://10.254.254.64:3000/getApps',
 		success: function(response) {
 			console.log(response);
+			//First, clear existing apps
+			var appList = document.getElementById("appList");
+			while (appList.hasChildNodes()) {
+				appList.removeChild(appList.lastChild);
+			}
 			//Array of app objects is in response
 			for (const [key, value] of Object.entries(response)) {
 				var appList = document.getElementById("appList");
@@ -128,12 +133,20 @@ function updateRecipe(){
 }
 
 function changeWorkingDirectory(){
-	var elems = getElementsByClassName("sub");
-	//derefence array into object
-	elems = elems[0];
-
-	//set working directory (if possible) to the path in elems.text
-	
+	var directoryText = document.getElementById("directoryText");
+	formData = {"directoryText": directoryText.value};
+	$.ajax({
+		type: 'POST',
+		url: 'http://10.254.254.64:3000/changeDirectory',
+		data : formData,
+		success: function(response) {
+			console.log(response);
+			updateApps();
+		},
+		error: function(xhr, status, err) {
+			console.log(xhr.responseText);
+		}
+	});
 }
 
 function saveNewApp(){
@@ -217,7 +230,6 @@ function finishSaveNewApp(filename){
 
 function deleteApp(button){
 	//remove app from list of working apps.
-	console.log("Boing");
 	var filename = button.parentNode.parentNode.getElementsByClassName("app-paragraph")[0].getElementsByClassName("app-sub-paragraph")[0].innerHTML;
 	console.log(filename);
 	formData = {"filename": filename};

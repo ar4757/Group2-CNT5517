@@ -54,6 +54,9 @@ app.listen(port, () => {
 var dirname = 'apps/'
 
 app.get('/getApps', function(req, res) {
+	if (!fs.existsSync(dirname)){
+		fs.mkdirSync(dirname);
+	}
 
 	var data = {};
 	fs.readdir(dirname, function(err, filenames) {
@@ -75,8 +78,8 @@ app.get('/getApps', function(req, res) {
 		});
 	});
 
-	//2 seconds
-	const fileFetchTime = 2000;
+	//0.5 seconds
+	const fileFetchTime = 500;
 	setTimeout(function() {
 		console.log(data);
 		res.json(data);
@@ -119,6 +122,22 @@ app.post('/deleteApp', function(req, res) {
 		}
 		console.log("File deleted successfully!");
 	})
+	
+	//this line is optional and will print the response on the command prompt
+	//It's useful so that we know what infomration is being transferred 
+	//using the server
+	console.log(response);
+	
+	//convert the response in JSON format
+	res.end(JSON.stringify(response));
+});
+
+app.post('/changeDirectory', function(req, res) {
+	response = {
+		directory : req.body.directoryText
+	};
+
+	dirname = response.directory;
 	
 	//this line is optional and will print the response on the command prompt
 	//It's useful so that we know what infomration is being transferred 
