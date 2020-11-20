@@ -31,11 +31,11 @@
 
   <!-- Tab links -->
   <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'Things')">Things</button>
-    <button class="tablinks" onclick="openTab(event, 'Services')">Services</button>
-    <button class="tablinks" onclick="openTab(event, 'Relationships')">Relationships</button>
-    <button class="tablinks" onclick="openTab(event, 'Recipe')">Recipe</button>
-    <button class="tablinks" onclick="openTab(event, 'Apps')">Apps</button>
+    <button id="thingsTab" class="tablinks" onclick="openTab(event, 'Things')">Things</button>
+    <button id="servicesTab" class="tablinks" onclick="openTab(event, 'Services')">Services</button>
+    <button id="relationshipsTab" class="tablinks" onclick="openTab(event, 'Relationships')">Relationships</button>
+    <button id="recipeTab" class="tablinks" onclick="openTab(event, 'Recipe')" ondrop="drop(event)" ondragover="allowDrop(event)">Recipe</button>
+    <button id="appsTab" class="tablinks" onclick="openTab(event, 'Apps')">Apps</button>
   </div>
 
   <!-- Tab content -->
@@ -50,21 +50,29 @@
     <div class="w3-container w3-blue">
       <h3>Services</h3>
     </div>
-    <p>list</p>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Service 1</div>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Service 2</div>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Service 3</div>
   </div>
 
   <div id="Relationships" class="tabcontent">
     <div class="w3-container w3-blue">
       <h3>Relationships</h3>
     </div>
-    <p>list</p>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Relationship 1</div>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Relationship 2</div>
   </div>
 
   <div id="Recipe" class="tabcontent">
     <div class="w3-container w3-blue">
       <h3>Recipe</h3>
     </div>
-    <p>list</p>
+    <br>
+    <button onclick="clearText()">Clear Recipe</button>
+    <h3>Services</h3>
+    <p id="servicesList"></p>
+    <h3>Relationships</h3>
+    <p id="relationshipsList"></p>
   </div>
 
   <div id="Apps" class="tabcontent">
@@ -268,4 +276,45 @@ function openTab(evt, id) {
   document.getElementById(id).style.display = "block";
   evt.currentTarget.className += " active";
 }
+</script>
+
+<script>
+  let chosenServices = [];
+  let chosenRelationships = [];
+  function allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.innerHTML);
+  }
+
+  function drop(ev) {
+    ev.preventDefault();
+    // add dragged text to recipe lists
+    var data = ev.dataTransfer.getData("text");
+    if(document.getElementById("servicesTab").className == "tablinks active" && chosenServices.includes(data)==false){
+      chosenServices.push(data);
+      var text = "";
+      for(var i = 0; i < chosenServices.length; i++) {
+        text += chosenServices[i] + "<br>";
+      }
+      document.getElementById("servicesList").innerHTML = text;
+    }
+    if(document.getElementById("relationshipsTab").className == "tablinks active" && chosenRelationships.includes(data)==false){
+      chosenRelationships.push(data);
+      var text = "";
+      for(var i = 0; i < chosenRelationships.length; i++) {
+        text += chosenRelationships[i] + "<br>";
+      }
+      document.getElementById("relationshipsList").innerHTML = text;
+    }
+  }
+
+  function clearText() {
+    chosenServices = [];
+    chosenRelationships = [];
+    document.getElementById('servicesList').innerHTML = "";
+    document.getElementById('relationshipsList').innerHTML = "";
+  }
 </script>
