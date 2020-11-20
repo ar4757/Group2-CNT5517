@@ -43,7 +43,7 @@ function move() {
 		//Every 10 milliseconds update the bar
 		var id = setInterval(frame, 10);
 		function frame() {
-		if (width >= 100) {
+		if (width >= 0) {
 			clearInterval(id);
 			i = 0;
 			var loadingBlockade = document.getElementById("loadingBlockade");
@@ -89,14 +89,47 @@ function changeWorkingDirectory(){
 }
 
 function saveNewApp(){
-	//this one is tricky, and will depend on later implementation of
-	//the working directory.
-
-	//psudeo code will look something like this:
-	
 	//request name for app
+	//popup here
+	const showPopup = () => {
+  		var popup = document.querySelector('.popup');
+  		popup.style.visibility = 'visible';
+	};
+
+	showPopup();
+}
+
+function nameFile(){
 	//check that this name is valid
+	var filename = document.getElementById("fileText");
+	finishSaveNewApp(filename);
+	//else {
+	//	console.log("Invalid filename" + filename.value);
+	//}
+}
+
+function finishSaveNewApp(filename){
 	//save contents of textare(div = "ide-text") to appropriate file type in working dir
+	const downloadToFile = (content, filename, contentType) => {
+  		const a = document.createElement('a');
+  		const file = new Blob([content], {type: contentType});
+  
+  		a.href= URL.createObjectURL(file);
+  		a.download = filename;
+  		a.click();
+
+		URL.revokeObjectURL(a.href);
+	};
+
+    const textArea = document.querySelector('.ide-text');
+	downloadToFile(textArea.value, filename.value, 'text/plain');
+
+	const hidePopup = () => {
+  		var popup = document.querySelector('.popup');
+  		popup.style.visibility = 'hidden';
+	};
+
+	hidePopup();
 }
 
 function deleteApp(){
