@@ -106,3 +106,25 @@ app.post('/saveApp', function(req, res) {
 	//convert the response in JSON format
 	res.end(JSON.stringify(response));
 });
+
+app.post('/deleteApp', function(req, res) {
+
+	response = {
+		filename : req.body.filename,
+	};
+
+	fs.unlink(dirname + response.filename, function(err) {
+		if(err) {
+			return console.log(err);
+		}
+		console.log("File deleted successfully!");
+	})
+	
+	//this line is optional and will print the response on the command prompt
+	//It's useful so that we know what infomration is being transferred 
+	//using the server
+	console.log(response);
+	
+	//convert the response in JSON format
+	res.end(JSON.stringify(response));
+});

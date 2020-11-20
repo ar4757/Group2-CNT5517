@@ -33,23 +33,7 @@ function load() {
  	}
 	});
 
-	$.ajax({
-		type: 'GET',
-		url: 'http://10.254.254.64:3000/getApps',
-		success: function(response) {
-			console.log(response);
-			//Array of app objects is in response
-			for (const [key, value] of Object.entries(response)) {
-				var appList = document.getElementById("appList");
-				var entry = document.createElement('li');
-				entry.innerHTML = key + '<br>' + value;
-				appList.appendChild(entry);
-			}
-	    },
-		error: function(xhr, status, err) {
-		  console.log(xhr.responseText);
-		}
-	   });
+	updateApps();
 }
 
 var i = 0;
@@ -75,6 +59,51 @@ function move() {
 		}
 		}
 	}
+}
+
+function updateApps(){
+	$.ajax({
+		type: 'GET',
+		url: 'http://10.254.254.64:3000/getApps',
+		success: function(response) {
+			console.log(response);
+			//Array of app objects is in response
+			for (const [key, value] of Object.entries(response)) {
+				var appList = document.getElementById("appList");
+				var entry = document.createElement('li');
+				var paragraph = document.createElement('p');
+				paragraph.className = "app-paragraph";
+				var subparagraph1 = document.createElement('p');
+				subparagraph1.innerHTML = key;
+				subparagraph1.className = "app-sub-paragraph";
+				paragraph.appendChild(subparagraph1);
+				var subparagraph2 = document.createElement('p');
+				subparagraph2.innerHTML = value;
+				subparagraph2.className = "app-sub-paragraph";
+				paragraph.appendChild(subparagraph2);
+				entry.appendChild(paragraph);
+				var buttonGroupDiv = document.createElement('div');
+				buttonGroupDiv.className = "btn-group";
+				buttonGroupDiv.id = "app-btn-group";
+				var activateButton = document.createElement('button');
+				activateButton.onclick = function() { activateApp(this); }
+				activateButton.innerHTML = "Activate";
+				activateButton.className = "button";
+				buttonGroupDiv.appendChild(activateButton);
+				var deleteButton = document.createElement('button');
+				deleteButton.onclick = function() { deleteApp(this); }
+				deleteButton.innerHTML = "Delete";
+				deleteButton.className = "button";
+				buttonGroupDiv.appendChild(deleteButton);
+				entry.appendChild(buttonGroupDiv);
+				entry.className = "list-entry";
+				appList.appendChild(entry);
+			}
+	    },
+		error: function(xhr, status, err) {
+		  console.log(xhr.responseText);
+		}
+	   });
 }
 
 function updateServices(){
@@ -128,29 +157,51 @@ function nameFile(){
 }
 
 function finishSaveNewApp(filename){
-	//save contents of textare(div = "ide-text") to appropriate file type in working dir
 	const downloadToFile = (content, filename, contentType) => {
-  		/*const a = document.createElement('a');
-  		const file = new Blob([content], {type: contentType});
-  
-  		a.href= URL.createObjectURL(file);
-  		a.download = filename;
-  		a.click();
-
-		URL.revokeObjectURL(a.href);*/
 		formData = {"content": content, "filename": filename, "contentType": contentType};
 		$.ajax({
 			type: 'POST',
 			url: 'http://10.254.254.64:3000/saveApp',
 			data : formData,
 			success: function(response) {
-			 console.log(response);
-			 //Array of app objects
-		   },
+				console.log(response);
+				//Add new app to list
+				var key = filename;
+				var value = content;
+				var appList = document.getElementById("appList");
+				var entry = document.createElement('li');
+				var paragraph = document.createElement('p');
+				paragraph.className = "app-paragraph";
+				var subparagraph1 = document.createElement('p');
+				subparagraph1.innerHTML = key;
+				subparagraph1.className = "app-sub-paragraph";
+				paragraph.appendChild(subparagraph1);
+				var subparagraph2 = document.createElement('p');
+				subparagraph2.innerHTML = value;
+				subparagraph2.className = "app-sub-paragraph";
+				paragraph.appendChild(subparagraph2);
+				entry.appendChild(paragraph);
+				var buttonGroupDiv = document.createElement('div');
+				buttonGroupDiv.className = "btn-group";
+				buttonGroupDiv.id = "app-btn-group";
+				var activateButton = document.createElement('button');
+				activateButton.onclick = function() { activateApp(this); }
+				activateButton.innerHTML = "Activate";
+				activateButton.className = "button";
+				buttonGroupDiv.appendChild(activateButton);
+				var deleteButton = document.createElement('button');
+				deleteButton.onclick = function() { deleteApp(this); }
+				deleteButton.innerHTML = "Delete";
+				deleteButton.className = "button";
+				buttonGroupDiv.appendChild(deleteButton);
+				entry.appendChild(buttonGroupDiv);
+				entry.className = "list-entry";
+				appList.appendChild(entry);
+			},
 			error: function(xhr, status, err) {
-			  console.log(xhr.responseText);
+				console.log(xhr.responseText);
 			}
-		   });
+		});
 	};
 
     const textArea = document.querySelector('.ide-text');
@@ -164,15 +215,45 @@ function finishSaveNewApp(filename){
 	hidePopup();
 }
 
-function deleteApp(){
+function deleteApp(button){
 	//remove app from list of working apps.
+	console.log("Boing");
+	var filename = button.parentNode.parentNode.getElementsByClassName("app-paragraph")[0].getElementsByClassName("app-sub-paragraph")[0].innerHTML;
+	console.log(filename);
+	formData = {"filename": filename};
+	$.ajax({
+		type: 'POST',
+		url: 'http://10.254.254.64:3000/deleteApp',
+		data : formData,
+		success: function(response) {
+		 console.log(response);
+		 //remove from list
+		 stopApp(button);
+		 button.parentNode.parentNode.parentNode.removeChild(button.parentNode.parentNode);
+	   },
+		error: function(xhr, status, err) {
+		  console.log(xhr.responseText);
+		}
+	   });
 }
 
 function loadApp(){
 	//load app from list with given directory
 }
 
-function activateApp(){
+function activateApp(button){
 	//activate the currently selected app
+
+	//toggle button to be a stop button
+	button.onclick = function() { stopApp(this); }
+	button.innerHTML = "Stop";
+}
+
+function stopApp(button){
+	//stop the currently selected app
+
+	//toggle button to be an activate button
+	button.onclick = function() { activateApp(this); }
+	button.innerHTML = "Activate";
 }
 

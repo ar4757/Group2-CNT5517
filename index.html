@@ -75,13 +75,10 @@
         </p>
     </form>
     <!-- These function need be added to js/app.js -->
-    <div class="btn-group">
+    <div class="btn-group" id="ide-btn-group">
         <!--This function should only be accessible in a certain program state.-->
       <button class="button" onClick="saveNewApp()">Save</button>
       <button class="button" onClick="uploadNewApp()">Upload</button>
-      <button class="button" onClick="activateApp()">Activate</button>
-      <button class="button" onClick="stopApp()">Stop</button>
-      <button class="button" onClick="deleteApp()">Delete</button>
 
     </div>
 
@@ -135,13 +132,30 @@ body{
     font-size: 10px;
 }
 
-.btn-group{
-    float:right;
+#ide-btn-group{
+  float:right;
+}
+
+.app-paragraph{
+  width:20%;
+  float:left;
+}
+
+.list-entry{
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  border-style:solid;
+  width:50%;
+}
+
+#app-btn-group{
+  margin-left:20%;
+  padding-top:22px;
 }
 
 .btn-group .button{
-    display:block;
-    box-shadow:inset 0px -3px 7px 0px #29bbff;
+  display:block;
+  box-shadow:inset 0px -3px 7px 0px #29bbff;
 	background:linear-gradient(to bottom, #2dabf9 5%, #0688fa 100%);
 	background-color:#2dabf9;
 	border-radius:3px;
