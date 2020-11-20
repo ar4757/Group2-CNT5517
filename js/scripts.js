@@ -18,6 +18,18 @@ function load() {
    	console.log(xhr.responseText);
  	}
 	});
+
+	$.ajax({
+		type: 'GET',
+		url: 'http://10.254.254.64:3000/apps',
+		success: function(response) {
+		 console.log(response);
+		 //Array of app objects
+	   },
+		error: function(xhr, status, err) {
+		  console.log(xhr.responseText);
+		}
+	   });
 }
 
 var i = 0;

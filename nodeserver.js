@@ -1,6 +1,8 @@
 const PORT = 1235;
 const MULTICAST_ADDR = "232.1.1.1";
 
+const fs = require('fs')
+const path = require('path')
 const dgram = require("dgram");
 const process = require("process");
 var express = require("express");
@@ -44,4 +46,34 @@ const port = 3000;
 
 app.listen(port, () => {
 	console.log(`NodeJS Express app is listening on port ${port}`);
+});
+
+app.get('/apps', function(req, res) {
+	const dirname = 'apps/'
+
+	var data = {};
+	readFiles(dirname, function(filename, content) {
+		data[filename] = content;
+		}, function(err) {
+		throw err;
+	});
+	res.json(data);
+
+	function readFiles(dirname, onFileContent, onError) {
+		fs.readdir(dirname, function(err, filenames) {
+		  if (err) {
+			onError(err);
+			return;
+		  }
+		  filenames.forEach(function(filename) {
+			fs.readFile(dirname + filename, 'utf-8', function(err, content) {
+			  if (err) {
+				onError(err);
+				return;
+			  }
+			  onFileContent(filename, content);
+			});
+		  });
+		});
+	  }
 });
