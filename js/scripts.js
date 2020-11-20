@@ -43,7 +43,8 @@ function move() {
 		//Every 10 milliseconds update the bar
 		var id = setInterval(frame, 10);
 		function frame() {
-		if (width >= 0) {
+		//Set to 0 if doing frontend, non-tweet related code to skip the 40 second wait
+		if (width >= 100) {
 			clearInterval(id);
 			i = 0;
 			var loadingBlockade = document.getElementById("loadingBlockade");
