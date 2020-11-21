@@ -112,10 +112,10 @@ function updateApps(){
 		}
 	   });
 }
-const getThingsInfo = require("tabs/Things");
-const getFilteredServices = require("tabs/Services");
-const getFilteredServicesRelationship = require("../tabs/Relationships");
-const {putRelationship, putService, recipe_list} = require("../tabs/recipe");
+import getThingsInfo from "tabs/Things";
+import getFilteredServices from "tabs/Services";
+import getFilteredServicesRelationship from "../tabs/Relationships";
+import {putRelationship, putService, recipe_list}  from "../tabs/recipe";
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
 	var elem = document.getElementById("Services");
@@ -300,4 +300,4 @@ function stopApp(button){
 	button.innerHTML = "Activate";
 }
 
-exports.tweets_arr = tweets_arr
+export {tweets_arr}

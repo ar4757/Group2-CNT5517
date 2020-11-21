@@ -22,6 +22,8 @@ function putService(service) {
 }
 
 
-exports.recipe_list = recipe_list
-exports.putRelationship = putRelationship
-exports.putService = putService
+export {
+recipe_list,
+    putRelationship,
+putService
+}

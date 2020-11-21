@@ -5,8 +5,8 @@
  Allow the user to bind  an unbound relationship by linking it to an appropriate service available
  under the Services’tab
  **/
-const Relationship_list = require("../js/parseTweets").Relationship_list;
-const Services_list = require("../js/parseTweets").Services_list;
+import Relationship_list from "../js/parseTweets";
+import Services_list from "../js/parseTweets";
 //creating a prototype for bounded services
 function service (serviceName, tweet = null, isBounded = false){
     this.is_bounded = isBounded;
@@ -50,5 +50,5 @@ const getFilteredServicesRelationship = (things_id_to_display = null) => {
     return servicesRelationship_list.filter(servicesRelationship => things_id_to_display[servicesRelationship.relationship["Thing ID"]] > -1);
 };
 
-exports.getFilteredServicesRelationship = getFilteredServicesRelationship;
+export {getFilteredServicesRelationship};
 

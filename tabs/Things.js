@@ -1,7 +1,7 @@
 /**
  The Things tab includes info about each thing
  **/
-const Identity_Thing_list = require("../js/parseTweets").Identity_Thing_list;
+import {Identity_Thing_list} from "../js/parseTweets";
 
 /**
  * get info for all things
@@ -16,4 +16,4 @@ const getThingsInfo = (things_info_json) => {
         //}
     });
 };
-exports.getThingsInfo = getThingsInfo;
+export {getThingsInfo}

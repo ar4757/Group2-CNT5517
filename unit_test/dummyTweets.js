@@ -16,4 +16,6 @@ const dummy_tweets = [{ "Tweet Type" : "Identity_Thing","Thing ID" : "MySmartThi
   { "Tweet Type" : "Relationships","Name" : "Morning Breakfast","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "Control","Category" : "Cooperative","Description" : "","Input1" : "getSignal", "Input2" : "turnOnsth" },
   { "Tweet Type" : "Relationships","Name" : "Coffee Machine","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "Control","Category" : "Cooperative","Description" : "","Input1" : "getLight", "Input2" : "turnOffsth" }
 ];
-exports.dummy_tweets = dummy_tweets
+export {
+  dummy_tweets
+}
