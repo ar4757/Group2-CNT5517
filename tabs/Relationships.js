@@ -11,12 +11,13 @@ const Services_list = require("../js/parseTweets").Services_list;
 function service (serviceName, tweet = null, isBounded = false){
     this.is_bounded = isBounded;
     this.content = tweet;
-    this.serviceName = tweet["name"];
+    this.serviceName = serviceName;
 }
 
 
 //creating a prototype for a relationship and two of its input services
 const ServicesRelationship = function(relationship_tweet) {
+    console.log("new one")
     let first_service_name = relationship_tweet["Input1"];
     let matched_service1 = Services_list.filter(service => service["name"] == first_service_name)
     let second_service_name = relationship_tweet["Input2"];
@@ -43,7 +44,7 @@ let servicesRelationship_list = Relationship_list.map(relationship => new Servic
  * @param   {list} a list of things id
  * @returns {list} a list of ServicesRelationship instances that will be displayed under Relationships tab
  */
-const getFilteredServicesRelationship = (things_id_to_display) => {
+const getFilteredServicesRelationship = (things_id_to_display = null) => {
     if(!things_id_to_display)
         return servicesRelationship_list;
     return servicesRelationship_list.filter(servicesRelationship => things_id_to_display[servicesRelationship.relationship["Thing ID"]] > -1);

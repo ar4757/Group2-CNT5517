@@ -38,8 +38,11 @@ function checkIsSecondService(serviceName) {
 }
 
 
-const putNext = (param) => {
-    current_func = current_func(param);
+const putNext = (param_list) => {
+    recipe_list = [];
+    param_list.forEach(param => current_func(param))
+    if(current_func != checkIsRelationship)
+        console.error("the last input isn't second service!");
 };
 
 exports.recipe_list = recipe_list

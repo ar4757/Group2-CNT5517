@@ -114,7 +114,7 @@ function updateApps(){
 const getThingsInfo = require("tabs/Things");
 const getFilteredServices = require("tabs/Services");
 const getFilteredServicesRelationship = require("../tabs/Relationships");
-import {recipe_list} from "tabs/recipe"
+
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
 	var elem = getElementById("services-list");
