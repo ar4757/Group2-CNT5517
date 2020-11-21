@@ -2,19 +2,18 @@
  Put tweets to five lists: Identity_Entitity_list, Services_list,
  Identity_Thing_list, Identity_Language_list and Relationship_list
  **/
+const tweets_arr = require("../unit_test/dummyTweets").dummy_tweets;
+const Identity_Entitity_list = tweets_arr.filter((tweet, pos) => tweet['Tweet Type'] == 'Identity_Entity' && tweets_arr.indexOf(tweet) == pos);
+const Services_list = tweets_arr.filter((tweet, pos) => tweet['Tweet Type'] == 'Service' && tweets_arr.indexOf(tweet) == pos);
+const Identity_Thing_list = tweets_arr.filter((tweet, pos) => tweet['Tweet Type'] == 'Identity_Thing' && tweets_arr.indexOf(tweet) == pos);
+const Identity_Language_list = tweets_arr.filter((tweet, pos) => tweet['Tweet Type'] == 'Identity_Language'&& tweets_arr.indexOf(tweet) == pos);
+const Relationship_list = tweets_arr.filter((tweet, pos) => tweet['Tweet Type'] == 'Relationship' && tweets_arr.indexOf(tweet) == pos);
 
-import {tweets_arr} from "./scripts"
-const Identity_Entitity_list = tweets_arr.filter(tweet => tweet['Tweet Type'] == 'Identity_Entity');
-const Services_list = tweets_arr.filter(tweet => tweet['Tweet Type'] == 'Service');
-const Identity_Thing_list = tweets_arr.filter(tweet => tweet['Tweet Type'] == 'Identity_Thing');
-const Identity_Language_list = tweets_arr.filter(tweet => tweet['Tweet Type'] == 'Identity_Language');
-const Relationship_list = tweets_arr.filter(tweet => tweet['Tweet Type'] == 'Relationship');
-export {
-    Identity_Entitity_list,
-    Services_list,
-    Identity_Thing_list,
-    Identity_Language_list,
-    Relationship_list
-}
+exports.Identity_Entitity_list = Identity_Entitity_list;
+exports.Services_list = Services_list;
+exports.Identity_Thing_list = Identity_Thing_list;
+exports.Identity_Language_list = Identity_Language_list;
+exports.Relationship_list = Relationship_list;
+
 
 

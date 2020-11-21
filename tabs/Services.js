@@ -4,7 +4,7 @@
  Each service presented under this tab should contain an identity of its owner thing.
  **/
 
-import {Services_list} from "../js/parseTweets"
+const Services_list = require("../js/parseTweets").Services_list;
 
 
 
@@ -15,9 +15,9 @@ import {Services_list} from "../js/parseTweets"
  */
 
 const getFilteredServices = (things_id_to_display) => {
+    if(!things_id_to_display)
+        return Services_list;
     return Services_list.filter(service => things_id_to_display[service["Thing ID"]] > -1);
 };
 
-export {
-    getFilteredServices
-}
+exports.getFilteredServices = getFilteredServices;

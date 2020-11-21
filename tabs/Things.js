@@ -1,8 +1,7 @@
 /**
  The Things tab includes info about each thing
  **/
-
-import {Identity_Thing_list} from "../js/parseTweets"
+const Identity_Thing_list = require("../js/parseTweets").Identity_Thing_list;
 
 /**
  * get info for all things
@@ -12,11 +11,9 @@ import {Identity_Thing_list} from "../js/parseTweets"
 
 const getThingsInfo = (things_info_json) => {
     Identity_Thing_list.forEach(thing => {
-        if(thing["Space ID"] == "G2") {
-            things_info_list[thing["Thing ID"]] = "xxxx";
-        }
+        //if(thing["Space ID"] == "G2") {
+            things_info_json[thing["Thing ID"]] = "xxxx";
+        //}
     });
 };
-export {
-    getThingsInfo
-}
+exports.getThingsInfo = getThingsInfo;

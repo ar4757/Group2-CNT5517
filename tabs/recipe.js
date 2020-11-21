@@ -42,6 +42,4 @@ const putNext = (param) => {
     current_func = current_func(param);
 };
 
-export {
-    recipe_list
-}
+exports.recipe_list = recipe_list
