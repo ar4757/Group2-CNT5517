@@ -9,6 +9,14 @@ import {Identity_Thing_list} from "../js/parseTweets"
  * @param   {?}    ?
  * @returns {?}    info of all things
  */
-const getInfo = () => {
 
+const getThingsInfo = (things_info_json) => {
+    Identity_Thing_list.forEach(thing => {
+        if(thing["Space ID"] == "G2") {
+            things_info_list[thing["Thing ID"]] = "xxxx";
+        }
+    });
 };
+export {
+    getThingsInfo
+}

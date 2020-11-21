@@ -13,6 +13,11 @@ import {Services_list} from "../js/parseTweets"
  * @param   {list} a list of things id
  * @returns {list} a list of services that will be displayed under service tab
  */
+
 const getFilteredServices = (things_id_to_display) => {
     return Services_list.filter(service => things_id_to_display[service["Thing ID"]] > -1);
 };
+
+export {
+    getFilteredServices
+}

@@ -8,16 +8,12 @@
 import {Relationship_list, Services_list} from "../js/parseTweets"
 
 //creating a prototype for bounded services
-const boundedService = function(tweet){
-    this.is_bounded = true;
+const service = function(serviceName, tweet = null, isBounded = false){
+    this.is_bounded = isBounded;
     this.content = tweet;
+    this.serviceName = tweet["name"];
 }
 
-//creating a prototype for unbounded services
-const unboundedService = function(){
-    this.is_bounded = false;
-    this.bounded_service = null;
-}
 
 //creating a prototype for a relationship and two of its input services
 const ServicesRelationship = function(relationship_tweet) {
@@ -25,16 +21,18 @@ const ServicesRelationship = function(relationship_tweet) {
     let matched_service1 = Services_list.filter(service => service["name"] == first_service_name)
     let second_service_name = relationship_tweet["Input2"];
     let matched_service2 = Services_list.filter(service => service["name"] == second_service_name)
-    this.first_service = matched_service1.length == 1 ? new boundedService(matched_service1[0]) : new unboundedService();
-    this.second_service = matched_service2.length == 1 ? new boundedService(matched_service2[0]) : new unboundedService();
-    this.relationship = relationship_tweet["Type"];
+    this.first_service = matched_service1.length == 1 ? new service(first_service_name, matched_service1[0], true) : new service(first_service_name);
+    this.second_service = matched_service2.length == 1 ? new service(second_service_name, matched_service2[0], true) : new service(second_service_name);
+    this.relationship = relationship_tweet;
+    this.type = "servicesRelationship";
 };
 
 
 //bind a unbounded service to a bounded service
 const bindService = (unbounded_service, service_tweet) => {
     unbounded_service.is_bounded = true;
-    unbounded_service.bounded_service = service_tweet;
+    unbounded_service.content = service_tweet;
+    unbounded_service.name = service_tweet["name"];
 };
 
 //create ServicesRelationship instances for all relationship tweets
@@ -45,8 +43,13 @@ let servicesRelationship_list = Relationship_list.map(relationship => new Servic
  * @param   {list} a list of things id
  * @returns {list} a list of ServicesRelationship instances that will be displayed under Relationships tab
  */
-const getFilteredServicesRelationship = (things_id_to_display) => {
+const getFilteredServicesRelationship = (things_id_to_display = null) => {
+    if(!things_id_to_display)
+        return servicesRelationship_list;
     return servicesRelationship_list.filter(servicesRelationship => things_id_to_display[servicesRelationship.relationship["Thing ID"]] > -1);
 };
 
+export {
+    getFilteredServicesRelationship
+}
 

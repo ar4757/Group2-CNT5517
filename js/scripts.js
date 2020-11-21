@@ -13,7 +13,7 @@ services and relationships into the current app.
 
 */
 
-
+let tweets_arr = null;
 function load() {
 	move();
 
@@ -21,7 +21,8 @@ function load() {
  	type: 'GET',
  	url: 'http://10.254.254.64:3000/tweets',
  	success: function(response) {
-  	console.log(response);
+ 		tweets_arr = response;
+  		console.log(response);
 	//Use the response tweet array here (response contains an array of tweets, see js console);
 	//displayThings(response);
 	//displayServices(response);
@@ -110,21 +111,43 @@ function updateApps(){
 		}
 	   });
 }
-
+import {getThingsInfo} from "tabs/Things"
+import {getFilteredServices} from "tabs/Services"
+import {getFilteredServicesRelationship} from "../tabs/Relationships";
+import {recipe_list} from "tabs/recipe"
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
 	var elem = getElementById("services-list");
-	elem.innerHtml = vals.Services_list.to_String();
+	var services_display_html = ""
+	const FilteredServices_list = getFilteredServices(things_id_to_display);
+	FilteredServices_list.forEach(service => {
+		services_display_html += '<p class="service_info">' +service["Name"] + "belong to" + FilteredServices_list["Thing ID"] + '</p>';
+	});
+	elem.innerHtml = services_display_html;
 }
 
 function updateThings(){
 	var elem = getElementById("things-list");
-	elem.innerHtml = vals.Identity_Thing_list.to_String();
+	var things_display_html = ""
+	const things_info_json = getThingsInfo();
+	things_info_json.forEach(thing_name => {
+		things_display_html += '<p class="thing_info">' +thing_name + '</p>' + '<p class="thing_info">' +
+		'description:' + things_info_json[thing_name] + '</p>';
+	});
+
+	elem.innerHtml = things_display_html;
 }
 
 function updateRelationships(){
 	var elem = getElementById("relationships-list");
-	elem.innerHtml =vals.Relationship_list.to_String();
+	var relationship_display_html = "";
+	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
+	FilteredServices_list.forEach(servicesRelationship => {
+		relationship_display_html += '<p class="relationship_info">' +servicesRelationship.relationship["Name"] + '</p>';
+		relationship_display_html += '<p class="service1_info">' +servicesRelationship.first_service["Name"] + '</p>';
+		relationship_display_html += '<p class="service2_info">' +servicesRelationship.second_service["Name"] + '</p>';
+	});
+	elem.innerHtml = relationship_display_html;
 }
 
 function updateRecipe(){
@@ -269,3 +292,6 @@ function stopApp(button){
 	button.innerHTML = "Activate";
 }
 
+export {
+	tweets_arr
+}
