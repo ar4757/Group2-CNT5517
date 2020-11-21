@@ -13,11 +13,12 @@ const Services_list = require("../js/parseTweets").Services_list;
  * @param   {list} a list of things id
  * @returns {list} a list of services that will be displayed under service tab
  */
-
+let filtered_services_list = Services_list;
 const getFilteredServices = (things_id_to_display) => {
     if(!things_id_to_display)
-        return Services_list;
-    return Services_list.filter(service => things_id_to_display[service["Thing ID"]] > -1);
+        return filtered_services_list;
+    filtered_services_list = Services_list.filter(service => things_id_to_display[service["Thing ID"]] > -1);
+    return filtered_services_list;
 };
 
 exports.getFilteredServices = getFilteredServices;

@@ -276,7 +276,19 @@ function openTab(evt, id) {
   // Show the current tab, and add an "active" class to the button that opened the tab
   document.getElementById(id).style.display = "block";
   evt.currentTarget.className += " active";
+  switch(id) {
+    case "Things":
+      updateThings();
+      break;
+    case "Services":
+      updateServices();
+      break;
+    case "Relationships":
+      updateRelationships();
+      break;
+    default:
 
+  };
 
 
 }
@@ -293,6 +305,7 @@ function openTab(evt, id) {
     ev.dataTransfer.setData("text", ev.target.innerHTML);
   }
 
+
   function drop(ev) {
     ev.preventDefault();
     // add dragged text to recipe lists
@@ -302,6 +315,7 @@ function openTab(evt, id) {
       var text = "";
       for(var i = 0; i < chosenServices.length; i++) {
         text += chosenServices[i] + "<br>";
+        putServiceToRecipe(chosenServices[i]);
       }
       document.getElementById("servicesList").innerHTML = text;
     }
@@ -310,6 +324,7 @@ function openTab(evt, id) {
       var text = "";
       for(var i = 0; i < chosenRelationships.length; i++) {
         text += chosenRelationships[i] + "<br>";
+        putRelationship(chosenRelationships[i]);
       }
       document.getElementById("relationshipsList").innerHTML = text;
     }

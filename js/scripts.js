@@ -55,7 +55,8 @@ function move() {
 			loadingBlockade.style.zIndex = "-1";
 		} else {
 			//Increment by 0.05 every 10 milliseconds. This means the bar will fill after 40 seconds
-			width += 0.025;
+			//width += 0.025;
+			width += 1;
 			elem.style.width = width + "%";
 		}
 		}
@@ -114,20 +115,20 @@ function updateApps(){
 const getThingsInfo = require("tabs/Things");
 const getFilteredServices = require("tabs/Services");
 const getFilteredServicesRelationship = require("../tabs/Relationships");
-
+const {putRelationship, putService, recipe_list} = require("../tabs/recipe");
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
-	var elem = getElementById("services-list");
+	var elem = document.getElementById("Services");
 	var services_display_html = ""
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 	FilteredServices_list.forEach(service => {
-		services_display_html += '<p class="service_info">' +service["Name"] + "belong to" + FilteredServices_list["Thing ID"] + '</p>';
+		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +service["Name"] + '</div>' + '</p>' + "belong to" + FilteredServices_list["Thing ID"] + '</p>';
 	});
 	elem.innerHtml = services_display_html;
 }
 
 function updateThings(){
-	var elem = getElementById("things-list");
+	var elem = document.getElementById("Things");
 	var things_display_html = ""
 	const things_info_json = getThingsInfo();
 	things_info_json.forEach(thing_name => {
@@ -143,13 +144,20 @@ function updateRelationships(){
 	var relationship_display_html = "";
 	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
 	FilteredServices_list.forEach(servicesRelationship => {
-		relationship_display_html += '<p class="relationship_info">' +servicesRelationship.relationship["Name"] + '</p>';
-		relationship_display_html += '<p class="service1_info">' +servicesRelationship.first_service["Name"] + '</p>';
-		relationship_display_html += '<p class="service2_info">' +servicesRelationship.second_service["Name"] + '</p>';
+		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +servicesRelationship.relationship["Name"] + '</div>';
+		relationship_display_html += '<p>' + "has " + servicesRelationship.first_service["Name"] + " service" + '</p>';
+		relationship_display_html += '<p>' + "has " + servicesRelationship.second_service["Name"] + " service" + '</p>';
 	});
 	elem.innerHtml = relationship_display_html;
 }
 
+function putServiceToRecipe(service_name) {
+	getFilteredServices().find(service => service["Name"] == service_name);
+}
+
+function putRelationshipToRecipe(relationship_name) {
+	getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == relationship_name);
+}
 function updateRecipe(){
 	//this function will require the drag and drop feature.
 
