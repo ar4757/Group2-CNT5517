@@ -69,10 +69,26 @@
     </div>
     <br>
     <button onclick="clearText()">Clear Recipe</button>
-    <h3>Services</h3>
-    <p id="servicesList"></p>
-    <h3>Relationships</h3>
-    <p id="relationshipsList"></p>
+    <div style="width: 100%;">
+      <div style="width: 40%; float: left">
+        <h3>Services</h3>
+        <div id="servicesList"></div>
+        <h3>Relationships</h3>
+        <div id="relationshipsList"></div>
+      </div>
+      <div id="appRecipe" style="width: 60%; float: left">
+        <h3>APP =</h3>
+        <div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+        <div id="service1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+        <h3>+ CONDITIONAL EVAL:</h3>
+        <h4>IF</h4>
+        <div id="relationship2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+        <div id="service2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+        <h4>THEN</h4>
+        <div id="relationship3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+        <div id="service3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+      </div>
+    </div>
   </div>
 
   <div id="Apps" class="tabcontent">
@@ -253,6 +269,15 @@ body{
   /*border: 1px solid #ccc;*/
   border-top: none;
 }
+
+.recipeBox {
+  display: inline-block;
+  text-align: center;
+  border: 3px solid black;
+  padding: 5px;
+  width: 20%;
+  height: 50px;
+}
 </style>
 
 <script>
@@ -303,30 +328,48 @@ function openTab(evt, id) {
 
   function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.innerHTML);
+    ev.dataTransfer.setData("type", ev.target.id);
   }
 
-
+  // add dragged text to recipe lists
   function drop(ev) {
     ev.preventDefault();
-    // add dragged text to recipe lists
     var data = ev.dataTransfer.getData("text");
     if(document.getElementById("servicesTab").className == "tablinks active" && chosenServices.includes(data)==false){
       chosenServices.push(data);
-      var text = "";
       for(var i = 0; i < chosenServices.length; i++) {
-        text += chosenServices[i] + "<br>";
         putServiceToRecipe(chosenServices[i]);
       }
-      document.getElementById("servicesList").innerHTML = text;
+      var newDiv = document.createElement("div");
+      newDiv.id = "service";
+      newDiv.className = "draggable";
+      newDiv.draggable = "true";
+      newDiv.addEventListener("dragstart", function(ev){drag(ev)}, false);
+      newDiv.innerHTML = data;
+      document.getElementById("servicesList").appendChild(newDiv);
     }
     if(document.getElementById("relationshipsTab").className == "tablinks active" && chosenRelationships.includes(data)==false){
       chosenRelationships.push(data);
-      var text = "";
       for(var i = 0; i < chosenRelationships.length; i++) {
-        text += chosenRelationships[i] + "<br>";
         putRelationship(chosenRelationships[i]);
       }
-      document.getElementById("relationshipsList").innerHTML = text;
+      var newDiv = document.createElement("div");
+      newDiv.id = "relationship";
+      newDiv.className = "draggable";
+      newDiv.draggable = "true";
+      newDiv.addEventListener("dragstart", function(ev){drag(ev)}, false);
+      newDiv.innerHTML = data;
+      document.getElementById("relationshipsList").appendChild(newDiv);
+    }
+  }
+
+  // add dragged relationships/services to correponding recipe boxes
+  function dropRecipe(ev){
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    //var data = "dragged";
+    if(ev.target.id.includes(ev.dataTransfer.getData("type"))){
+      ev.target.innerHTML = data;
     }
   }
 
@@ -335,5 +378,11 @@ function openTab(evt, id) {
     chosenRelationships = [];
     document.getElementById('servicesList').innerHTML = "";
     document.getElementById('relationshipsList').innerHTML = "";
+    document.getElementById("relationship1").innerHTML = "RELATIONSHIP";
+    document.getElementById("service1").innerHTML = "SERVICE";
+    document.getElementById("relationship2").innerHTML = "RELATIONSHIP";
+    document.getElementById("service2").innerHTML = "SERVICE";
+    document.getElementById("relationship3").innerHTML = "RELATIONSHIP";
+    document.getElementById("service3").innerHTML = "SERVICE";
   }
 </script>
