@@ -112,7 +112,7 @@ function updateApps(){
 		}
 	   });
 }
-import getThingsInfo from "tabs/Things";
+import getThingsInfo from "../tabs/Things";
 import getFilteredServices from "tabs/Services";
 import getFilteredServicesRelationship from "../tabs/Relationships";
 import {putRelationship, putService, recipe_list}  from "../tabs/recipe";
