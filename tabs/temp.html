@@ -1,0 +1,392 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+
+    <title>IOT IDE</title>
+<meta name="description" content="IOT IDE">
+    <meta name="author" content="Group2">
+
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="js/scripts.js" type="module"></script>
+
+    </head>
+
+    <body>
+    <!--Progress bar while starting up the application (recommended by professor)-->
+<div class="header">
+    <h1>CIS4930-CNT5517 Group 2</h1>
+</div>
+
+<div id="progressBar">
+    <div id="bar">Loading tweets</div>
+</div>
+
+<div id="loadingBlockade"></div>
+
+    <script type="module">
+        import {load} from "./js.scripts.js";
+        load();
+    </script>
+
+    <!-- Tab links -->
+    <div class="tab">
+    <button id="thingsTab" class="tablinks" onclick="openTab(event, 'Things')">Things</button>
+    <button id="servicesTab" class="tablinks" onclick="openTab(event, 'Services')">Services</button>
+    <button id="relationshipsTab" class="tablinks" onclick="openTab(event, 'Relationships')">Relationships</button>
+    <button id="recipeTab" class="tablinks" onclick="openTab(event, 'Recipe')" ondrop="drop(event)" ondragover="allowDrop(event)">Recipe</button>
+    <button id="appsTab" class="tablinks" onclick="openTab(event, 'Apps')">Apps</button>
+    </div>
+
+    <!-- Tab content -->
+    <div id="Things" class="tabcontent">
+    <div class="w3-container w3-blue">
+    <h3>Things</h3>
+    </div>
+    <p>list</p>
+    </div>
+
+    <div id="Services" class="tabcontent">
+    <div class="w3-container w3-blue">
+    <h3>Services</h3>
+    </div>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Service 1</div>
+<div class="draggable" draggable="true" ondragstart="drag(event)">Service 2</div>
+<div class="draggable" draggable="true" ondragstart="drag(event)">Service 3</div>
+</div>
+
+<div id="Relationships" class="tabcontent">
+    <div class="w3-container w3-blue">
+    <h3>Relationships</h3>
+    </div>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Relationship 1</div>
+<div class="draggable" draggable="true" ondragstart="drag(event)">Relationship 2</div>
+</div>
+
+<div id="Recipe" class="tabcontent">
+    <div class="w3-container w3-blue">
+    <h3>Recipe</h3>
+    </div>
+    <br>
+    <button onclick="clearText()">Clear Recipe</button>
+<div style="width: 100%;">
+    <div style="width: 40%; float: left">
+    <h3>Services</h3>
+    <div id="servicesList"></div>
+    <h3>Relationships</h3>
+    <div id="relationshipsList"></div>
+    </div>
+    <div id="appRecipe" style="width: 60%; float: left">
+<h3>APP =</h3>
+<div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+    <div id="service1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+    <h3>+ CONDITIONAL EVAL:</h3>
+<h4>IF</h4>
+<div id="relationship2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+    <div id="service2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+    <h4>THEN</h4>
+    <div id="relationship3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+    <div id="service3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+    </div>
+    </div>
+    </div>
+
+    <div id="Apps" class="tabcontent">
+    <div class="w3-container w3-blue">
+    <h3>Apps</h3>
+    </div>
+
+    <!--Set the directory to the current path. The contents of this directory
+    need be made visual and accesible somewhere else.-->
+    <form class="w3-container">
+    <p>
+    <label>Directory Path</label>
+<input class="w3-input" type="text" id="directoryText" value="apps/">
+    <input class="sub" type="submit" onClick="changeWorkingDirectory(); return false;">
+    </p>
+    </form>
+    <!-- These function need be added to js/app.js -->
+    <div class="btn-group" id="ide-btn-group">
+    <!--This function should only be accessible in a certain program state.-->
+<button class="button" onClick="saveNewApp()">Save</button>
+    <button class="button" onClick="uploadNewApp()">Upload</button>
+
+    </div>
+
+    <!-- Text box for adding new app in the current file. Upon clicking save,
+      a textbox should apper to name the file. -->
+    <div class="ide">
+    <textarea placeholder="Code goes here" class="ide-text" cols="30" rows="12"></textarea>
+    </div>
+
+    <div class="popup">
+    <div class="w3-container" id="filenamePopup">
+    <p>
+    <label>Enter File Name</label>
+<input class="w3-input" id="fileText" type="text" value="">
+    <input class="sub" type="submit" onClick="nameFile()">
+    </p>
+    </div>
+    </div>
+
+    <!-- List of apps that have currently been uploaded or saved.
+        These will include 'objects' that are grabbed from a JS function. -->
+    <div class="available-app-list">
+    <p>Available apps: </p>
+<ol id = "appList">
+    </ol>
+    </div>
+
+    </div>
+    </body>
+
+    <style>
+/* Style the tabs on the right side */
+.tablinks{
+    border-radius: 12px;
+}
+.directory-container{
+    position:absolute;
+}
+.ide{
+    float:right;
+    padding-top: 0px;
+}
+body{
+    background-color: #ccc;
+}
+.header{
+    padding: 20px;
+    text-align: center;
+    background: #29bbff;
+    color: white;
+    font-size: 10px;
+}
+
+#ide-btn-group{
+    float:right;
+}
+
+.app-paragraph{
+    width:20%;
+    float:left;
+}
+
+.list-entry{
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+    border-style:solid;
+    width:50%;
+}
+
+#app-btn-group{
+    margin-left:20%;
+    padding-top:22px;
+}
+
+.btn-group .button{
+    display:block;
+    box-shadow:inset 0px -3px 7px 0px #29bbff;
+    background:linear-gradient(to bottom, #2dabf9 5%, #0688fa 100%);
+    background-color:#2dabf9;
+    border-radius:3px;
+    border:1px solid #0b0e07;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:15px;
+    padding:9px 23px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #263666;
+}
+
+.btn-group .button:hover {
+    background:linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);
+    background-color:#0688fa;
+}
+.btn-group .button:active {
+    position:relative;
+    top:1px;
+}
+
+.vertical-tabs{
+    float: right;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    width: 20%;
+    height: 300px;
+}
+
+.vertical-tabs button {
+    display: block;
+    background-color: inherit;
+    color: black;
+    padding: 22px 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.vertical-tabs button.active {
+    background-color: #ccc;
+}
+
+.tab {
+    overflow: hidden;
+    /* border: 1px solid #ccc; */
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    /*border: 1px solid #ccc;*/
+    border-top: none;
+}
+
+.recipeBox {
+    display: inline-block;
+    text-align: center;
+    border: 3px solid black;
+    padding: 5px;
+    width: 20%;
+    height: 50px;
+}
+</style>
+
+<script>
+
+function openTab(evt, id) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(id).style.display = "block";
+    evt.currentTarget.className += " active";
+    switch(id) {
+        case "Things":
+            updateThings();
+            break;
+        case "Services":
+            updateServices();
+            break;
+        case "Relationships":
+            updateRelationships();
+            break;
+        default:
+
+    };
+
+
+}
+</script>
+
+<script>
+let chosenServices = [];
+let chosenRelationships = [];
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.innerHTML);
+    ev.dataTransfer.setData("type", ev.target.id);
+}
+
+// add dragged text to recipe lists
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    if(document.getElementById("servicesTab").className == "tablinks active" && chosenServices.includes(data)==false){
+        chosenServices.push(data);
+        for(var i = 0; i < chosenServices.length; i++) {
+            putServiceToRecipe(chosenServices[i]);
+        }
+        var newDiv = document.createElement("div");
+        newDiv.id = "service";
+        newDiv.className = "draggable";
+        newDiv.draggable = "true";
+        newDiv.addEventListener("dragstart", function(ev){drag(ev)}, false);
+        newDiv.innerHTML = data;
+        document.getElementById("servicesList").appendChild(newDiv);
+    }
+    if(document.getElementById("relationshipsTab").className == "tablinks active" && chosenRelationships.includes(data)==false){
+        chosenRelationships.push(data);
+        for(var i = 0; i < chosenRelationships.length; i++) {
+            putRelationshipToRecipe(chosenRelationships[i]);
+        }
+        var newDiv = document.createElement("div");
+        newDiv.id = "relationship";
+        newDiv.className = "draggable";
+        newDiv.draggable = "true";
+        newDiv.addEventListener("dragstart", function(ev){drag(ev)}, false);
+        newDiv.innerHTML = data;
+        document.getElementById("relationshipsList").appendChild(newDiv);
+    }
+}
+
+// add dragged relationships/services to correponding recipe boxes
+function dropRecipe(ev){
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    //var data = "dragged";
+    if(ev.target.id.includes(ev.dataTransfer.getData("type"))){
+        ev.target.innerHTML = data;
+    }
+}
+
+function clearText() {
+    chosenServices = [];
+    chosenRelationships = [];
+    document.getElementById('servicesList').innerHTML = "";
+    document.getElementById('relationshipsList').innerHTML = "";
+    document.getElementById("relationship1").innerHTML = "RELATIONSHIP";
+    document.getElementById("service1").innerHTML = "SERVICE";
+    document.getElementById("relationship2").innerHTML = "RELATIONSHIP";
+    document.getElementById("service2").innerHTML = "SERVICE";
+    document.getElementById("relationship3").innerHTML = "RELATIONSHIP";
+    document.getElementById("service3").innerHTML = "SERVICE";
+}
+</script>
+

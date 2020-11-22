@@ -36,7 +36,10 @@ app.get('/tweets', function(req, res) {
             return match.replace(/([^\\])"/g, "$1\\\"");
         });
 		console.info(`Tweet from: ${rinfo.address}:${rinfo.port} - ${messageFormatted}`);
-	tweet_array.push(JSON.parse(messageFormatted));
+		let tweet = JSON.parse(messageFormatted);
+		tweet["IP"] = rinfo.address;
+		tweet["port"] = rinfo.port;
+		tweet_array.push(tweet);
 	});
 
 	//Wait 40 seconds to load tweets
