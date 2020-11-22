@@ -12,15 +12,15 @@ services and relationships into the current app.
 7. Add images?
 
 */
+import {parse} from "./parseTweets.js";
 
-let tweets_arr = null;
 function load() {
 	move();
 	$.ajax({
  	type: 'GET',
  	url: 'http://' + getHostIP() + ':3000/tweets',
  	success: function(response) {
- 		tweets_arr = response;
+ 		parse(response);
   		console.log(response);
 	//Use the response tweet array here (response contains an array of tweets, see js console);
 	//displayThings(response);
@@ -328,4 +328,4 @@ window.activateApp = activateApp;
 window.stopApp = stopApp;
 window.putServiceToRecipe = putServiceToRecipe;
 window.putRelationshipToRecipe = putRelationshipToRecipe;
-export {tweets_arr, load}
+export {load}

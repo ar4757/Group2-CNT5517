@@ -39,7 +39,11 @@ const bindService = (unbounded_service, service_tweet) => {
 };
 
 //create ServicesRelationship instances for all relationship tweets
-let servicesRelationship_list = Relationship_list.map(relationship => new ServicesRelationship(relationship));
+let servicesRelationship_list = null;
+
+const onload = () => {
+    servicesRelationship_list = Relationship_list.map(relationship => new ServicesRelationship(relationship));
+}
 
 /**
  * filter relationships that belong to certain things
@@ -52,5 +56,5 @@ const getFilteredServicesRelationship = (things_id_to_display = null) => {
     return servicesRelationship_list.filter(servicesRelationship => things_id_to_display[servicesRelationship.relationship["Thing ID"]] > -1);
 };
 
-export {getFilteredServicesRelationship};
+export {getFilteredServicesRelationship, onload};
 
