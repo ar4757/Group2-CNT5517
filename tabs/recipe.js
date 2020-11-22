@@ -1,5 +1,5 @@
-import {filteredServicesRelationship_list} from "./Relationships"
-import {filteredServices_list} from "./Services"
+//import {filteredServicesRelationship_list} from "./Relationships.js"
+//import {filteredServices_list} from "./Services.js"
 
 let recipe_list = []
 

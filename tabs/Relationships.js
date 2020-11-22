@@ -5,8 +5,9 @@
  Allow the user to bind  an unbound relationship by linking it to an appropriate service available
  under the Services’tab
  **/
-import Relationship_list from "../js/parseTweets";
-import Services_list from "../js/parseTweets";
+
+import {Relationship_list} from "../js/parseTweets.js";
+import {Services_list} from "../js/parseTweets.js";
 //creating a prototype for bounded services
 function service (serviceName, tweet = null, isBounded = false){
     this.is_bounded = isBounded;

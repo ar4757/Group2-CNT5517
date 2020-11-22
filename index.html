@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="css/styles.css">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script src="js/scripts.js"></script>
+  <script src="js/scripts.js" type="module"></script>
 
 </head>
 
@@ -27,7 +27,10 @@
 
   <div id="loadingBlockade"></div>
 
-  <script>load()</script>
+  <script type='module'>
+    import {load} from "./js/scripts.js";
+    load();
+    </script>
 
   <!-- Tab links -->
   <div class="tab">
@@ -324,7 +327,7 @@ function openTab(evt, id) {
       var text = "";
       for(var i = 0; i < chosenRelationships.length; i++) {
         text += chosenRelationships[i] + "<br>";
-        putRelationship(chosenRelationships[i]);
+        putRelationshipToRecipe(chosenRelationships[i]);
       }
       document.getElementById("relationshipsList").innerHTML = text;
     }

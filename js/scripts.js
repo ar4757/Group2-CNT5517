@@ -19,7 +19,7 @@ function load() {
 
 	$.ajax({
  	type: 'GET',
- 	url: 'http://10.254.254.64:3000/tweets',
+ 	url: 'http://192.168.254.49:3000/tweets',
  	success: function(response) {
  		tweets_arr = response;
   		console.log(response);
@@ -66,7 +66,7 @@ function move() {
 function updateApps(){
 	$.ajax({
 		type: 'GET',
-		url: 'http://10.254.254.64:3000/getApps',
+		url: 'http://192.168.254.49:3000/getApps',
 		success: function(response) {
 			console.log(response);
 			//First, clear existing apps
@@ -112,43 +112,48 @@ function updateApps(){
 		}
 	   });
 }
-import getThingsInfo from "tabs/Things";
-import getFilteredServices from "tabs/Services";
-import getFilteredServicesRelationship from "../tabs/Relationships";
-import {putRelationship, putService, recipe_list}  from "../tabs/recipe";
+import {getThingsInfo} from "../tabs/Things.js";
+import {getFilteredServices} from "../tabs/Services.js";
+import {getFilteredServicesRelationship} from "../tabs/Relationships.js";
+import {putRelationship, putService, recipe_list}  from "../tabs/recipe.js";
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
 	var elem = document.getElementById("Services");
 	var services_display_html = ""
+	var things_id_to_display = null;
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 	FilteredServices_list.forEach(service => {
-		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +service["Name"] + '</div>' + '</p>' + "belong to" + FilteredServices_list["Thing ID"] + '</p>';
+		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +service["Name"] + '</div>' + '</p>' + "belong to " + service["Thing ID"] + '</p>';
 	});
-	elem.innerHtml = services_display_html;
+	elem.innerHTML = services_display_html;
 }
 
 function updateThings(){
+	
 	var elem = document.getElementById("Things");
 	var things_display_html = ""
 	const things_info_json = getThingsInfo();
-	things_info_json.forEach(thing_name => {
+	Object.keys(things_info_json).forEach(thing_name => {
+		console.log("here1");
 		things_display_html += '<p class="thing_info">' +thing_name + '</p>' + '<p class="thing_info">' +
 		'description:' + things_info_json[thing_name] + '</p>';
 	});
 
-	elem.innerHtml = things_display_html;
+	elem.innerHTML = things_display_html;
+	console.log("update things", things_display_html);
 }
 
 function updateRelationships(){
-	var elem = getElementById("relationships-list");
+	var elem = document.getElementById("Relationships");
 	var relationship_display_html = "";
+	var things_id_to_display = null;
 	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
-	FilteredServices_list.forEach(servicesRelationship => {
+	filteredServicesRelationship_list.forEach(servicesRelationship => {
 		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +servicesRelationship.relationship["Name"] + '</div>';
-		relationship_display_html += '<p>' + "has " + servicesRelationship.first_service["Name"] + " service" + '</p>';
-		relationship_display_html += '<p>' + "has " + servicesRelationship.second_service["Name"] + " service" + '</p>';
+		relationship_display_html += '<p>' + "has " + servicesRelationship.first_service.serviceName + " service" + '</p>';
+		relationship_display_html += '<p>' + "has " + servicesRelationship.second_service.serviceName + " service" + '</p>';
 	});
-	elem.innerHtml = relationship_display_html;
+	elem.innerHTML = relationship_display_html;
 }
 
 function putServiceToRecipe(service_name) {
@@ -300,4 +305,19 @@ function stopApp(button){
 	button.innerHTML = "Activate";
 }
 
-export {tweets_arr}
+window.move = move;
+window.updateApps = updateApps;
+window.updateServices = updateServices;
+window.updateThings = updateThings;
+window.updateRelationships = updateRelationships;
+window.updateRecipe = updateRecipe;
+window.changeWorkingDirectory = changeWorkingDirectory;
+window.saveNewApp = saveNewApp;
+window.finishSaveNewApp = finishSaveNewApp;
+window.deleteApp = deleteApp;
+window.loadApp = loadApp;
+window.activateApp = activateApp;
+window.stopApp = stopApp;
+window.putServiceToRecipe = putServiceToRecipe;
+window.putRelationshipToRecipe = putRelationshipToRecipe;
+export {tweets_arr, load}
