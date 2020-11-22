@@ -18,13 +18,14 @@ function service (serviceName, tweet = null, isBounded = false){
 
 //creating a prototype for a relationship and two of its input services
 const ServicesRelationship = function(relationship_tweet) {
-    console.log("new one")
+    console.log("new one1", Services_list);
     let first_service_name = relationship_tweet["Input1"];
-    let matched_service1 = Services_list.filter(service => service["name"] == first_service_name)
+    let matched_service1 = Services_list.find(service => service["Name"] == first_service_name)
     let second_service_name = relationship_tweet["Input2"];
-    let matched_service2 = Services_list.filter(service => service["name"] == second_service_name)
-    this.first_service = matched_service1.length == 1 ? new service(first_service_name, matched_service1[0], true) : new service(first_service_name);
-    this.second_service = matched_service2.length == 1 ? new service(second_service_name, matched_service2[0], true) : new service(second_service_name);
+    let matched_service2 = Services_list.find(service => service["Name"] == second_service_name)
+    console.log("place1", matched_service1, matched_service2);
+    this.first_service = matched_service1 != undefined ? new service(first_service_name, matched_service1, true) : new service(first_service_name);
+    this.second_service = matched_service2 != undefined ? new service(second_service_name, matched_service2, true) : new service(second_service_name);
     this.relationship = relationship_tweet;
     this.type = "servicesRelationship";
 };

@@ -13,9 +13,10 @@ const dummy_tweets = [{ "Tweet Type" : "Identity_Thing","Thing ID" : "MySmartThi
   { "Tweet Type" : "Service","Name" : "turnLight","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","API" : "turnLaser:[isTurnOn,int, NULL]:(NULL)","Type" : "Action","AppCategory" : "Lighting","Description" : "","Keywords" : "turn on of turn off the laser" },
   { "Tweet Type" : "Service","Name" : "readButton","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","API" : "turnLaser:[NULL,NULL, NULL]:(int)","Type" : "Action","AppCategory" : "Lighting","Description" : "","Keywords" : "turn on of turn off the laser" },
   { "Tweet Type" : "Service","Name" : "readSwitch","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","API" : "turnLaser:[NULL,NULL, NULL]:(int)","Type" : "Action","AppCategory" : "Lighting","Description" : "","Keywords" : "turn on of turn off the laser" },
-  { "Tweet Type" : "Relationships","Name" : "Morning Breakfast","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "Control","Category" : "Cooperative","Description" : "","Input1" : "getSignal", "Input2" : "turnOnsth" },
-  { "Tweet Type" : "Relationships","Name" : "Coffee Machine","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "Control","Category" : "Cooperative","Description" : "","Input1" : "getLight", "Input2" : "turnOffsth" }
+  { "Tweet Type" : "Relationships","Name" : "Morning Breakfast","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "Control","Category" : "Cooperative","Description" : "","Input1" : "getSignal", "Input2" : "turnLight" },
+  { "Tweet Type" : "Relationships","Name" : "Coffee Machine","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "Control","Category" : "Cooperative","Description" : "","Input1" : "readSwitch", "Input2" : "turnOffsth" }
 ];
+
 export {
   dummy_tweets
 }

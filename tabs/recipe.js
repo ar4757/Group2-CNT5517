@@ -10,7 +10,9 @@ function putRelationship(param){
             console.error("there is unbounded service in this relationship");
             return false;
         }
+        
         recipe_list.push(param);
+        console.log(recipe_list);
         return true;
     }
     return false;
@@ -19,6 +21,7 @@ function putRelationship(param){
 
 function putService(service) {
     recipe_list.push(service);
+    console.log(recipe_list);
 }
 
 

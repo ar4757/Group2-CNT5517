@@ -150,18 +150,24 @@ function updateRelationships(){
 	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
 	filteredServicesRelationship_list.forEach(servicesRelationship => {
 		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +servicesRelationship.relationship["Name"] + '</div>';
-		relationship_display_html += '<p>' + "has " + servicesRelationship.first_service.serviceName + " service" + '</p>';
-		relationship_display_html += '<p>' + "has " + servicesRelationship.second_service.serviceName + " service" + '</p>';
+		let is_first_bounded = servicesRelationship.first_service.is_bounded ? "bounded" : "unbounded";
+		let is_second_bounded = servicesRelationship.second_service.is_bounded ? "bounded" : "unbounded";
+		relationship_display_html += '<p>' + "has " + servicesRelationship.first_service.serviceName + " " + is_first_bounded + " service" + '</p>';
+		relationship_display_html += '<p>' + "has " + servicesRelationship.second_service.serviceName +  " " + is_second_bounded +  " service" + '</p>';
 	});
 	elem.innerHTML = relationship_display_html;
 }
 
 function putServiceToRecipe(service_name) {
-	getFilteredServices().find(service => service["Name"] == service_name);
+	console.log(service_name);
+	let service = getFilteredServices().find(service => service["Name"] == service_name);
+	putService(service);
 }
 
 function putRelationshipToRecipe(relationship_name) {
-	getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == relationship_name);
+	console.log(relationship_name);
+	let serviceRelationship = getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == relationship_name);
+	putRelationship(serviceRelationship);
 }
 function updateRecipe(){
 	//this function will require the drag and drop feature.
