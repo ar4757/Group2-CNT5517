@@ -16,10 +16,9 @@ services and relationships into the current app.
 let tweets_arr = null;
 function load() {
 	move();
-
 	$.ajax({
  	type: 'GET',
- 	url: 'http://192.168.254.49:3000/tweets',
+ 	url: 'http://' + getHostIP() + ':3000/tweets',
  	success: function(response) {
  		tweets_arr = response;
   		console.log(response);
@@ -33,7 +32,6 @@ function load() {
    	console.log(xhr.responseText);
  	}
 	});
-
 	updateApps();
 }
 
@@ -55,18 +53,22 @@ function move() {
 			loadingBlockade.style.zIndex = "-1";
 		} else {
 			//Increment by 0.05 every 10 milliseconds. This means the bar will fill after 40 seconds
-			//width += 0.025;
-			width += 1;
+			width += 0.025;
 			elem.style.width = width + "%";
 		}
 		}
 	}
 }
 
+function getHostIP(){
+	var ip = location.host;
+	return ip;
+}
+
 function updateApps(){
 	$.ajax({
 		type: 'GET',
-		url: 'http://192.168.254.49:3000/getApps',
+		url: 'http://' + getHostIP() + ':3000/getApps',
 		success: function(response) {
 			console.log(response);
 			//First, clear existing apps
@@ -179,7 +181,7 @@ function changeWorkingDirectory(){
 	formData = {"directoryText": directoryText.value};
 	$.ajax({
 		type: 'POST',
-		url: 'http://10.254.254.64:3000/changeDirectory',
+		url: 'http://' + getHostIP() + ':3000/changeDirectory',
 		data : formData,
 		success: function(response) {
 			console.log(response);
@@ -216,7 +218,7 @@ function finishSaveNewApp(filename){
 		formData = {"content": content, "filename": filename, "contentType": contentType};
 		$.ajax({
 			type: 'POST',
-			url: 'http://10.254.254.64:3000/saveApp',
+			url: 'http://' + getHostIP() + ':3000/saveApp',
 			data : formData,
 			success: function(response) {
 				console.log(response);
@@ -277,7 +279,7 @@ function deleteApp(button){
 	formData = {"filename": filename};
 	$.ajax({
 		type: 'POST',
-		url: 'http://10.254.254.64:3000/deleteApp',
+		url: 'http://' + getHostIP() + ':3000/deleteApp',
 		data : formData,
 		success: function(response) {
 		 console.log(response);

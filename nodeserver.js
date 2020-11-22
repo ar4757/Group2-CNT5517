@@ -32,8 +32,9 @@ app.get('/tweets', function(req, res) {
 
 	socket.on("message", function(message, rinfo) {
 		//Replace invalid json from atlas with corrected escaped quotes
-		var messageFormatted = message.toString().replace(/\["([A-z0-9]*)"/, "[\\\"$1\\\"");
-		messageFormatted = messageFormatted.replace(/\("([A-z0-9]*)"/, "(\\\"$1\\\"");
+        var messageFormatted = message.toString().replace(/\[[^\]]*\]/g, function(match) {
+            return match.replace(/([^\\])"/g, "$1\\\"");
+        });
 		console.info(`Tweet from: ${rinfo.address}:${rinfo.port} - ${messageFormatted}`);
 	tweet_array.push(JSON.parse(messageFormatted));
 	});
