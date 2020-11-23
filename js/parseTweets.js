@@ -18,7 +18,7 @@ const parse = (tweets_arr) => {
 	 Identity_Thing_list.push(...temp);
 	 temp  = tweets_arr.filter((tweet, pos) => tweet['Tweet Type'] == 'Identity_Language'&& tweets_arr.indexOf(tweet) == pos);
 	 Identity_Language_list.push(...temp);
-	 temp = tweets_arr.filter((tweet, pos) => tweet['Tweet Type'] == 'Relationships' && tweets_arr.indexOf(tweet) == pos);
+	 temp = tweets_arr.filter((tweet, pos) => tweet['Tweet Type'] == 'Relationship' && tweets_arr.indexOf(tweet) == pos);
 	 Relationship_list.push(...temp);
 	 onload();
 }

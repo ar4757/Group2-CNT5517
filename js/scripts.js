@@ -13,7 +13,7 @@ services and relationships into the current app.
 
 */
 import {parse} from "./parseTweets.js";
-
+import {onload} from "../tabs/Relationships.js";
 function load() {
 	move();
 	$.ajax({
@@ -21,6 +21,7 @@ function load() {
  	url: 'http://' + getHostIP() + ':3000/tweets',
  	success: function(response) {
  		parse(response);
+ 		onload();
   		console.log(response);
 	//Use the response tweet array here (response contains an array of tweets, see js console);
 	//displayThings(response);
