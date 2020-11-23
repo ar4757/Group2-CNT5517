@@ -71,28 +71,29 @@
     <h3>Recipe</h3>
     </div>
     <br>
+  <div style="width: 100%;">
+  <div style="width: 40%; float: left">
     <button onclick="clearText()">Clear Recipe</button>
-<div style="width: 100%;">
-    <div style="width: 40%; float: left">
     <h3>Services</h3>
     <div id="servicesList"></div>
     <h3>Relationships</h3>
     <div id="relationshipsList"></div>
-    </div>
-    <div id="appRecipe" style="width: 60%; float: left">
-<h3>APP =</h3>
-<div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+  </div>
+  <div id="appRecipe" style="width: 60%; float: left">
+    <button onclick="">Finalize Recipe</button>
+    <h3>APP =</h3>
+    <div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
     <div id="service1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
     <h3>+ CONDITIONAL EVAL:</h3>
-<h4>IF</h4>
-<div id="relationship2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+    <h4>IF</h4>
+    <div id="relationship2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
     <div id="service2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
     <h4>THEN</h4>
     <div id="relationship3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
     <div id="service3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
-    </div>
-    </div>
-    </div>
+  </div>
+  </div>
+</div>
 
     <div id="Apps" class="tabcontent">
     <div class="w3-container w3-blue">
@@ -389,4 +390,5 @@ function clearText() {
     document.getElementById("service3").innerHTML = "SERVICE";
 }
 </script>
+
 

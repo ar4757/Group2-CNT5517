@@ -21,24 +21,24 @@ const createClient = (ip_addr, message, relationship_type = null, secondIp_addr 
 		let result = json['Service Result'];
 		if(relationship_type != null) {
 			switch (relationship_type) {
-				case "Control":
+				case "control":
 					if(result)
 						createClient(secondIp_addr, makeMessage(secondService["Thing ID"], secondService["Space ID"], secondService["Name"], result));
 					break
-				case "Drive":
+				case "drive":
 					createClient(secondIp_addr, makeMessage(secondService["Thing ID"], secondService["Space ID"], secondService["Name"], result));
 					break
-				case "Support":
+				case "support":
 					if(result)
 						createClient(secondIp_addr, makeMessage(secondService["Thing ID"], secondService["Space ID"], secondService["Name"], result));
 					break
-				case "Extend":
+				case "extend":
 					createClient(secondIp_addr, makeMessage(secondService["Thing ID"], secondService["Space ID"], secondService["Name"], ""));
 					break
-				case "Contest":
+				case "contest":
 					createClient(secondIp_addr, makeMessage(secondService["Thing ID"], secondService["Space ID"], secondService["Name"], ""));
 					break
-				case "Interfere":
+				case "interfere":
 					if(message["Space ID"] != secondService["Space ID"])
 						createClient(secondIp_addr, makeMessage(secondService["Thing ID"], secondService["Space ID"], secondService["Name"], ""));
 					break
