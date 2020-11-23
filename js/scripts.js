@@ -132,7 +132,7 @@ function updateServices(){
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
 		console.log("here1");
-		services_display_html += '<input type="checkbox" id="'+ thing_name +'">' + 
+		services_display_html += '<input type="checkbox" id="'+ thing_name +'" checked="true">' + 
 		'<label for="'+ thing_name + '">' + thing_name + '</label>';
 	});
 	services_display_html += '<br><br><h4>Services Available:</h4>';
@@ -167,7 +167,7 @@ function updateRelationships(){
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
 		console.log("here1");
-		relationship_display_html += '<input type="checkbox" id="'+ thing_name +'">' + 
+		relationship_display_html += '<input type="checkbox" id="'+ thing_name +'" checked="true">' + 
 		'<label for="'+ thing_name + '">' + thing_name + '</label>';
 	});
 	relationship_display_html += '<br><br><h4>Relationships Available:</h4>';
