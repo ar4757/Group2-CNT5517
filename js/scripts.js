@@ -46,7 +46,7 @@ function move() {
 		var id = setInterval(frame, 10);
 		function frame() {
 		//Set to 0 if doing frontend, non-tweet related code to skip the 40 second wait. Otherwise, 100
-		if (width >= 100) {
+		if (width >= 0) {
 			clearInterval(id);
 			i = 0;
 			var loadingBlockade = document.getElementById("loadingBlockade");
@@ -398,51 +398,63 @@ function loadApp(){
 	//load app from list with given directory
 }
 
-var runTimeIntervals = {};
+var statuses = {};
 
 function activateApp(button){
 	//activate the currently selected app
 
+	var entry = button.parentNode.parentNode;
 	//display as running
-	var runningDisplay = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[2];
-	var runTime = 0;
-	var runTimeInterval = setInterval(function(){ 
-		runningDisplay.innerHTML = "Running for " + runTime + " seconds";
-		runTime += 1;
-	}, 1000);
-	var key = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
-	runTimeIntervals[key] = runTimeInterval;
-
-	//App has been running for 5 minutes
-	setTimeout(function(){
-		if (runTime >= 300) {
-			runningDisplay.innerHTML = "App ended due to running over 5 minutes";
-		}
-		else {
-			runningDisplay.innerHTML = "Not running";
-		}
-		clearInterval(runTimeInterval);
-		//toggle button to be an activate button once again
-		button.onclick = function() { activateApp(this); }
-		button.innerHTML = "Activate";
-	}, 300000);
+	var runningDisplay = entry.getElementsByClassName('app-sub-paragraph')[2];
+	runningDisplay.innerHTML = "Active";
 
 	//toggle button to be a stop button
-	button.onclick = function() { stopApp(this); }
+	button.onclick = function() { stopApp(this); };
 	button.innerHTML = "Stop";
+
+	//display in status panel
+	var statusList = document.getElementById("statusList");
+	var entryClone = entry.cloneNode(true);
+	var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+	btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
+	btnGroup.removeChild(btnGroup.getElementsByClassName('button')[0]);
+	var stopButton = btnGroup.getElementsByClassName('button')[0];
+	stopButton.onclick = function() { stopApp(stopButton); };
+	statusList.appendChild(entryClone);
+
+	var key = entryClone.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
+	var listType = entry.parentNode.id;
+	statuses[key] = listType;
 }
 
 function stopApp(button){
 	//stop the currently selected app
 
 	//display as not running
-	var key = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
-	clearInterval(runTimeIntervals[key]);
-	var runningDisplay = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[2];
-	runningDisplay.innerHTML = "Not running";
+	var entry = button.parentNode.parentNode;
+	var key = entry.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
+	var runningDisplay = entry.getElementsByClassName('app-sub-paragraph')[2];
+	runningDisplay.innerHTML = "Inactive";
+
+	var listType = statuses[key];
+	for (var i = 0, len = document.getElementById(listType).getElementsByTagName('li').length; i < len; i++) {
+		//Found the corresponding entry in the list that matches the status entry
+		if (document.getElementById(listType).getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
+			document.getElementById(listType).getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[2].innerHTML = "Inactive";
+			var btn = document.getElementById(listType).getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[1];
+			btn.onclick = function() { activateApp(btn) };
+			btn.innerHTML = "Activate";
+		}
+	}
+
+	//After 5 minutes, remove inactive app from status list
+	setTimeout(function() {
+		var statusList = document.getElementById("statusList");
+		statusList.removeChild(entry);
+	}, 300000);
 
 	//toggle button to be an activate button
-	button.onclick = function() { activateApp(this); }
+	button.onclick = function() { activateApp(this); };
 	button.innerHTML = "Activate";
 }
 
