@@ -178,7 +178,7 @@ function updateRecipe(){
 
 function changeWorkingDirectory(){
 	var directoryText = document.getElementById("directoryText");
-	formData = {"directoryText": directoryText.value};
+	var formData = {"directoryText": directoryText.value};
 	$.ajax({
 		type: 'POST',
 		url: 'http://' + getHostIP() + ':3000/changeDirectory',
@@ -193,6 +193,72 @@ function changeWorkingDirectory(){
 	});
 }
 
+function finalizeRecipe(){
+	const showPopup = () => {
+		var popup = document.querySelector('.popupRecipe');
+		popup.style.visibility = 'visible';
+  	};
+
+  	showPopup();
+}
+
+function nameRecipe(){
+	//check that this name is valid
+	var recipename = document.getElementById("recipeText").value;
+	finishFinalizeRecipe(recipename);
+	//else {
+	//	console.log("Invalid filename" + filename.value);
+	//}
+}
+
+function finishFinalizeRecipe(recipename){
+	var key = recipename;
+
+	//const recipeContent = document.querySelector('.ide-text');
+	const recipeContent = "Call service 1";
+	var value = recipeContent;
+	var recipeList = document.getElementById("recipeList");
+	var entry = document.createElement('li');
+	var paragraph = document.createElement('p');
+	paragraph.className = "app-paragraph";
+	var subparagraph1 = document.createElement('p');
+	subparagraph1.innerHTML = key;
+	subparagraph1.className = "app-sub-paragraph";
+	paragraph.appendChild(subparagraph1);
+	var subparagraph2 = document.createElement('p');
+	subparagraph2.innerHTML = value;
+	subparagraph2.className = "app-sub-paragraph";
+	paragraph.appendChild(subparagraph2);
+	entry.appendChild(paragraph);
+	var buttonGroupDiv = document.createElement('div');
+	buttonGroupDiv.className = "btn-group";
+	buttonGroupDiv.id = "app-btn-group";
+	var saveButton = document.createElement('button');
+	saveButton.onclick = function() { saveNewApp() };
+	saveButton.innerHTML = "Save";
+	saveButton.className = "button";
+	buttonGroupDiv.appendChild(saveButton);
+	var activateButton = document.createElement('button');
+	activateButton.onclick = function() { activateApp(this); }
+	activateButton.innerHTML = "Activate";
+	activateButton.className = "button";
+	buttonGroupDiv.appendChild(activateButton);
+	var deleteButton = document.createElement('button');
+	deleteButton.onclick = function() { deleteApp(this); }
+	deleteButton.innerHTML = "Delete";
+	deleteButton.className = "button";
+	buttonGroupDiv.appendChild(deleteButton);
+	entry.appendChild(buttonGroupDiv);
+	entry.className = "list-entry";
+	recipeList.appendChild(entry);
+
+	const hidePopup = () => {
+		var popup = document.querySelector('.popupRecipe');
+		popup.style.visibility = 'hidden';
+  };
+
+  hidePopup();
+}
 function saveNewApp(){
 	//request name for app
 	//popup here
@@ -215,7 +281,7 @@ function nameFile(){
 
 function finishSaveNewApp(filename){
 	const downloadToFile = (content, filename, contentType) => {
-		formData = {"content": content, "filename": filename, "contentType": contentType};
+		var formData = {"content": content, "filename": filename, "contentType": contentType};
 		$.ajax({
 			type: 'POST',
 			url: 'http://' + getHostIP() + ':3000/saveApp',
@@ -261,8 +327,9 @@ function finishSaveNewApp(filename){
 		});
 	};
 
-    const textArea = document.querySelector('.ide-text');
-	downloadToFile(textArea.value, filename.value, 'text/plain');
+	//const appContent = document.querySelector('.ide-text');
+	const appContent = "Call service 1";
+	downloadToFile(appContent, filename.value, 'text/plain');
 
 	const hidePopup = () => {
   		var popup = document.querySelector('.popup');
@@ -276,7 +343,7 @@ function deleteApp(button){
 	//remove app from list of working apps.
 	var filename = button.parentNode.parentNode.getElementsByClassName("app-paragraph")[0].getElementsByClassName("app-sub-paragraph")[0].innerHTML;
 	console.log(filename);
-	formData = {"filename": filename};
+	var formData = {"filename": filename};
 	$.ajax({
 		type: 'POST',
 		url: 'http://' + getHostIP() + ':3000/deleteApp',
@@ -320,6 +387,7 @@ window.updateThings = updateThings;
 window.updateRelationships = updateRelationships;
 window.updateRecipe = updateRecipe;
 window.changeWorkingDirectory = changeWorkingDirectory;
+window.finalizeRecipe = finalizeRecipe;
 window.saveNewApp = saveNewApp;
 window.finishSaveNewApp = finishSaveNewApp;
 window.deleteApp = deleteApp;
@@ -328,4 +396,6 @@ window.activateApp = activateApp;
 window.stopApp = stopApp;
 window.putServiceToRecipe = putServiceToRecipe;
 window.putRelationshipToRecipe = putRelationshipToRecipe;
+window.nameFile = nameFile;
+window.nameRecipe = nameRecipe;
 export {load}

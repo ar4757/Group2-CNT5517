@@ -80,7 +80,7 @@
     <div id="relationshipsList"></div>
   </div>
   <div id="appRecipe" style="width: 60%; float: left">
-    <button onclick="">Finalize Recipe</button>
+    <button onclick="finalizeRecipe()">Finalize Recipe</button>
     <h3>APP =</h3>
     <div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
     <div id="service1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
@@ -93,6 +93,19 @@
     <div id="service3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
   </div>
   </div>
+
+    <!-- Text box for adding new app in the current file. Upon clicking save,
+    a textbox should apper to name the file. -->
+
+    <div class="popupRecipe">
+    <div class="w3-container" id="recipePopup">
+    <p>
+    <label>Enter Recipe Name</label>
+    <input class="w3-input" id="recipeText" type="text" value="">
+    <input class="sub" type="submit" onClick="nameRecipe()">
+    </p>
+    </div>
+    </div>
 </div>
 
     <div id="Apps" class="tabcontent">
@@ -109,19 +122,9 @@
     <input class="sub" type="submit" onClick="changeWorkingDirectory(); return false;">
     </p>
     </form>
-    <!-- These function need be added to js/app.js -->
-    <div class="btn-group" id="ide-btn-group">
-    <!--This function should only be accessible in a certain program state.-->
-<button class="button" onClick="saveNewApp()">Save</button>
-    <button class="button" onClick="uploadNewApp()">Upload</button>
-
-    </div>
 
     <!-- Text box for adding new app in the current file. Upon clicking save,
       a textbox should apper to name the file. -->
-    <div class="ide">
-    <textarea placeholder="Code goes here" class="ide-text" cols="30" rows="12"></textarea>
-    </div>
 
     <div class="popup">
     <div class="w3-container" id="filenamePopup">
@@ -136,10 +139,16 @@
     <!-- List of apps that have currently been uploaded or saved.
         These will include 'objects' that are grabbed from a JS function. -->
     <div class="available-app-list">
-    <p>Available apps: </p>
+    <p>Available apps from working directory: </p>
 <ol id = "appList">
     </ol>
     </div>
+
+    <div class="available-recipe-list">
+        <p>Available recipes from this session: </p>
+    <ol id = "recipeList">
+        </ol>
+        </div>
 
     </div>
     </body>
@@ -176,16 +185,27 @@ body{
     float:left;
 }
 
+.available-recipe-list{
+    width:50%;
+    float:left;
+}
+
+.available-app-list{
+    width:50%;
+    float:left;
+}
+
 .list-entry{
     padding-bottom: 20px;
     margin-bottom: 10px;
     border-style:solid;
-    width:50%;
+    width:400px;
 }
 
 #app-btn-group{
     margin-left:20%;
     padding-top:22px;
+    padding-left:40%;
 }
 
 .btn-group .button{
