@@ -138,7 +138,7 @@ function updateServices(){
 	services_display_html += '<br><br><h4>Services Available:</h4>';
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 	FilteredServices_list.forEach(service => {
-		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +service["Name"] + '</div>' + '</div>' + "belongs to " + service["Thing ID"] + '</div><br>';
+		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +service["Name"] + '</div>' + '</p>' + "belong to " + service["Thing ID"] + '</p>';
 	});
 	elem.innerHTML = services_display_html;
 }
@@ -150,8 +150,8 @@ function updateThings(){
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
 		console.log("here1");
-		things_display_html += '<div class="thing_info">' +thing_name + '</div>' + '<div class="thing_info">' +
-		'description:' + things_info_json[thing_name] + '</div><br>';
+		things_display_html += '<p class="thing_info">' +thing_name + '</p>' + '<p class="thing_info">' +
+		'description:' + things_info_json[thing_name] + '</p>';
 	});
 
 	elem.innerHTML = things_display_html;
@@ -172,7 +172,7 @@ function updateRelationships(){
 	});
 	relationship_display_html += '<br><br><h4>Relationships Available:</h4>';
 
-	// get services for drop down services
+	// drop down services
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 
 	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
@@ -180,20 +180,8 @@ function updateRelationships(){
 		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +servicesRelationship.relationship["Name"] + '</div>';
 		let is_first_bounded = servicesRelationship.first_service.is_bounded ? "bounded" : "unbounded";
 		let is_second_bounded = servicesRelationship.second_service.is_bounded ? "bounded" : "unbounded";
-		relationship_display_html += '<div style="display:inline-block">' + "has " + servicesRelationship.first_service.serviceName + " " + is_first_bounded + " service" + '</div>';
-		//relationship_display_html += '<select id="'+servicesRelationship.relationship["Name"]+servicesRelationship.first_service.serviceName+'" style="display:inline-block">';
-		relationship_display_html += '<select id="dropdown" style="display:inline-block">';
-		FilteredServices_list.forEach(service => {
-			relationship_display_html += '<option value="'+service["Name"]+'">'+ service["Name"] + '</option>';
-		});
-		relationship_display_html += '</select><br>';
-		relationship_display_html += '<div style="display:inline-block">' + "has " + servicesRelationship.second_service.serviceName +  " " + is_second_bounded +  " service" + '</div>';
-		relationship_display_html += '<select id="dropdown" style="display:inline-block">';
-		//relationship_display_html += '<select id="'+servicesRelationship.relationship["Name"]+servicesRelationship.second_service.serviceName+'" style="display:inline-block">';
-		FilteredServices_list.forEach(service => {
-			relationship_display_html += '<option value="'+service["Name"]+'">'+ service["Name"] + '</option>';
-		});
-		relationship_display_html += '</select><br><br>';
+		relationship_display_html += '<p>' + "has " + servicesRelationship.first_service.serviceName + " " + is_first_bounded + " service" + '</p>';
+		relationship_display_html += '<p>' + "has " + servicesRelationship.second_service.serviceName +  " " + is_second_bounded +  " service" + '</p>';
 	});
 	elem.innerHTML = relationship_display_html;
 }
