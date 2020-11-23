@@ -12,11 +12,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 var cors = require('cors');
 app.use(cors());
-app.post('/callServices', (req, res) => {
-	console.log("important! ");
-	const content = req.body;
-	console.log(content);
-});
+
 app.get('/tweets', function(req, res) {
 	var tweet_array = [];
 

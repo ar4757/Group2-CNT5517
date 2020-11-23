@@ -34,19 +34,7 @@ function load() {
 	});
 	updateApps();
 }
-function callServices(data) {
-	$.ajax({
-		type: 'POST',
-		url: 'http://' + getHostIP() + ':3000/callServices',
-		data: data,
-		success: function(response) {
-			console.log("callServices");
-		},
-		error: function(xhr, status, err) {
-			console.log(xhr.responseText);
-		}
-	});
-}
+
 var i = 0;
 function move() {
 	if (i == 0) {
