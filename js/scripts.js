@@ -202,6 +202,20 @@ function updateRecipe(){
 
 }
 
+function callServices(serviceData) {
+	$.ajax({
+		type: 'POST',
+		url: 'http://' + getHostIP() + ':3000/callServices',
+		data: serviceData,
+		success: function(response) {
+			console.log("callServices");
+		},
+		error: function(xhr, status, err) {
+			console.log(xhr.responseText);
+		}
+	});
+}
+
 function changeWorkingDirectory(){
 	var directoryText = document.getElementById("directoryText");
 	var formData = {"directoryText": directoryText.value};
@@ -240,8 +254,8 @@ function nameRecipe(){
 function finishFinalizeRecipe(recipename){
 	var key = recipename;
 
-	//const recipeContent = document.querySelector('.ide-text');
-	const recipeContent = "Call service 1";
+	//Placeholder - replace with the recipe content (services to be called)
+	const recipeContent = "Recipe content goes here";
 	var value = recipeContent;
 	var recipeList = document.getElementById("recipeList");
 	var entry = document.createElement('li');
@@ -399,8 +413,10 @@ function loadApp(){
 }
 
 function activateApp(button){
-	//activate the currently selected app
-
+	//Placeholder - replace with the recipe's data
+	var serviceData = {"thing_id": "", "space_id": "", "service_name": "", "service_input": ""};
+	//activate services in the currently selected app
+	callServices(serviceData);
 	//update display
 	activateAll(button);
 }
@@ -561,4 +577,5 @@ window.putServiceToRecipe = putServiceToRecipe;
 window.putRelationshipToRecipe = putRelationshipToRecipe;
 window.nameFile = nameFile;
 window.nameRecipe = nameRecipe;
+window.callServices = callServices;
 export {load}

@@ -151,3 +151,19 @@ app.post('/changeDirectory', function(req, res) {
 	//convert the response in JSON format
 	res.end(JSON.stringify(response));
 });
+
+app.post('/callServices', function(req, res) {
+	response = {
+		thing_id : req.body.thing_id,
+		space_id : req.body.space_id,
+		service_name : req.body.service_name,
+		service_input : req.body.service_input
+	};
+	
+	//Example of using a variable received from the request
+	console.log("Here is the thing id: " + response.thing_id);
+	
+	//run callService.js code here using any service info that was given
+
+	res.end(JSON.stringify(response));
+});
