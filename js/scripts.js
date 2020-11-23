@@ -269,7 +269,7 @@ function finishFinalizeRecipe(recipename){
 	var key = recipename;
 
 	//Placeholder - replace with the recipe content (services to be called)
-	const recipeContent = "Recipe content goes here";
+	const recipeContent = recipe_list;
 	var value = recipeContent;
 	var recipeList = document.getElementById("recipeList");
 	var entry = document.createElement('li');
