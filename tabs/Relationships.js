@@ -19,9 +19,9 @@ function service (serviceName, tweet = null, isBounded = false){
 //creating a prototype for a relationship and two of its input services
 const ServicesRelationship = function(relationship_tweet) {
     console.log("new one1", Services_list);
-    let first_service_name = relationship_tweet["Input1"];
+    let first_service_name = relationship_tweet["FS name"];
     let matched_service1 = Services_list.find(service => service["Name"] == first_service_name)
-    let second_service_name = relationship_tweet["Input2"];
+    let second_service_name = relationship_tweet["SS name"];
     let matched_service2 = Services_list.find(service => service["Name"] == second_service_name)
     console.log("place1", matched_service1, matched_service2);
     this.first_service = matched_service1 != undefined ? new service(first_service_name, matched_service1, true) : new service(first_service_name);
@@ -42,7 +42,9 @@ const bindService = (unbounded_service, service_tweet) => {
 let servicesRelationship_list = null;
 
 const onload = () => {
+    
     servicesRelationship_list = Relationship_list.map(relationship => new ServicesRelationship(relationship));
+    console.log("ssss", servicesRelationship_list);
 }
 
 /**
