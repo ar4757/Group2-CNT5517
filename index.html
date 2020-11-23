@@ -135,16 +135,22 @@
     <!-- List of apps that have currently been uploaded or saved.
         These will include 'objects' that are grabbed from a JS function. -->
     <div class="available-app-list">
-    <p>Available apps from working directory: </p>
-<ol id = "appList">
-    </ol>
+        <p>Available apps from working directory: </p>
+        <ol id = "appList">
+        </ol>
     </div>
 
     <div class="available-recipe-list">
         <p>Available recipes from this session: </p>
-    <ol id = "recipeList">
+        <ol id = "recipeList">
         </ol>
-        </div>
+    </div>
+
+    <div class="status-list">
+        <p>Status List: </p>
+        <ol id = "statusList">
+        </ol>
+    </div>
 
     </div>
     </body>
@@ -191,12 +197,24 @@ body{
     float:left;
 }
 
+.status-list{
+
+}
+
 .list-entry{
     padding-bottom: 20px;
     margin-bottom: 10px;
     border-style:solid;
     width:400px;
     height:200px;
+}
+
+.status-list-entry{
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+    border-style:solid;
+    width:400px;
+    height:100px;
 }
 
 #app-btn-group{

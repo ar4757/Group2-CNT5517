@@ -398,52 +398,149 @@ function loadApp(){
 	//load app from list with given directory
 }
 
-var runTimeIntervals = {};
-
 function activateApp(button){
 	//activate the currently selected app
 
-	//display as running
-	var runningDisplay = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[2];
-	var runTime = 0;
-	var runTimeInterval = setInterval(function(){ 
-		runningDisplay.innerHTML = "Running for " + runTime + " seconds";
-		runTime += 1;
-	}, 1000);
-	var key = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
-	runTimeIntervals[key] = runTimeInterval;
+	//update display
+	activateAll(button);
+}
 
-	//App has been running for 5 minutes
-	setTimeout(function(){
-		if (runTime >= 300) {
-			runningDisplay.innerHTML = "App ended due to running over 5 minutes";
-		}
-		else {
-			runningDisplay.innerHTML = "Not running";
-		}
-		clearInterval(runTimeInterval);
-		//toggle button to be an activate button once again
-		button.onclick = function() { activateApp(this); }
-		button.innerHTML = "Activate";
-	}, 300000);
+var appList = document.getElementById('appList');
+var recipeList = document.getElementById('recipeList');
+var statusList = document.getElementById('statusList');
 
-	//toggle button to be a stop button
-	button.onclick = function() { stopApp(this); }
-	button.innerHTML = "Stop";
+function activateAll(button){
+	var entry = button.parentNode.parentNode;
+	var key = entry.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
+
+	for (var i = 0, len = appList.getElementsByTagName('li').length; i < len; i++) {
+		//Found the corresponding entry in the list that matches the status entry
+		if (appList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
+			//display as running
+			var runningDisplay = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[2];
+			runningDisplay.innerHTML = "Active";
+
+			//toggle button to be a stop button
+			var btn = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[1];
+			btn.onclick = function() { stopApp(btn) };
+			btn.innerHTML = "Stop";
+		}
+	}
+
+	for (var i = 0, len = recipeList.getElementsByTagName('li').length; i < len; i++) {
+		//Found the corresponding entry in the list that matches the status entry
+		if (recipeList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
+			//display as running
+			var runningDisplay = recipeList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[2];
+			runningDisplay.innerHTML = "Active";
+
+			//toggle button to be a stop button
+			var btn = recipeList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[1];
+			btn.onclick = function() { stopApp(btn) };
+			btn.innerHTML = "Stop";
+		}
+	}
+
+	if (statusList.getElementsByTagName('li').length > 0) {
+		for (var i = 0, len = statusList.getElementsByTagName('li').length; i < len; i++) {
+			//Found the corresponding entry in the list that matches the status entry
+			if (statusList.getElementsByClassName('status-list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
+				//display as running
+				var runningDisplay = statusList.getElementsByClassName('status-list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1];
+				runningDisplay.innerHTML = "Active";
+
+				//toggle button to be a stop button
+				var btn = statusList.getElementsByClassName('status-list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[0];
+				btn.onclick = function() { stopApp(btn) };
+				btn.innerHTML = "Stop";
+			}
+			//Entry was not in status panel
+			else if (i == len - 1) {
+				//display in status panel
+				var entryClone = entry.cloneNode(true);
+				var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+				btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
+				btnGroup.removeChild(btnGroup.getElementsByClassName('button')[0]);
+				var stopButton = btnGroup.getElementsByClassName('button')[0];
+				stopButton.onclick = function() { stopApp(stopButton); };
+				entryClone.className = 'status-list-entry';
+				entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+				statusList.appendChild(entryClone);
+			}
+		}
+	}
+	//Status list is empty when activating an app
+	else {
+		//display in status panel
+		var entryClone = entry.cloneNode(true);
+		var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+		btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
+		btnGroup.removeChild(btnGroup.getElementsByClassName('button')[0]);
+		var stopButton = btnGroup.getElementsByClassName('button')[0];
+		stopButton.onclick = function() { stopApp(stopButton); };
+		entryClone.className = 'status-list-entry';
+		entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+		statusList.appendChild(entryClone);
+	}
 }
 
 function stopApp(button){
 	//stop the currently selected app
 
-	//display as not running
-	var key = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
-	clearInterval(runTimeIntervals[key]);
-	var runningDisplay = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[2];
-	runningDisplay.innerHTML = "Not running";
+	//update display
+	stopAll(button);
+}
 
-	//toggle button to be an activate button
-	button.onclick = function() { activateApp(this); }
-	button.innerHTML = "Activate";
+function stopAll(button){
+	var entry = button.parentNode.parentNode;
+	var key = entry.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
+
+	for (var i = 0, len = appList.getElementsByTagName('li').length; i < len; i++) {
+		//Found the corresponding entry in the list that matches the status entry
+		if (appList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
+			//display as not running
+			var runningDisplay = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[2];
+			runningDisplay.innerHTML = "Inactive";
+
+			//toggle button to be a stop button
+			var btn = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[1];
+			btn.onclick = function() { activateApp(btn) };
+			btn.innerHTML = "Activate";
+		}
+	}
+
+	for (var i = 0, len = recipeList.getElementsByTagName('li').length; i < len; i++) {
+		//Found the corresponding entry in the list that matches the status entry
+		if (recipeList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
+			//display as running
+			var runningDisplay = recipeList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[2];
+			runningDisplay.innerHTML = "Inactive";
+
+			//toggle button to be a stop button
+			var btn = recipeList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[1];
+			btn.onclick = function() { activateApp(btn) };
+			btn.innerHTML = "Activate";
+		}
+	}
+
+	for (var i = 0, len = statusList.getElementsByTagName('li').length; i < len; i++) {
+		//Found the corresponding entry in the list that matches the status entry
+		if (statusList.getElementsByClassName('status-list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
+			//display as running
+			var runningDisplay = statusList.getElementsByClassName('status-list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1];
+			runningDisplay.innerHTML = "Inactive";
+
+			//toggle button to be a stop button
+			var btn = statusList.getElementsByClassName('status-list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[0];
+			btn.onclick = function() { activateApp(btn) };
+			btn.innerHTML = "Activate";
+
+			//After 5 minutes, remove inactive app from status list
+			setTimeout(function() {
+				statusList.removeChild(statusList.getElementsByClassName('status-list-entry')[i]);
+			}, 300000);
+		}
+	}
 }
 
 window.move = move;
