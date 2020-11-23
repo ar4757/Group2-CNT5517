@@ -91,6 +91,10 @@ function updateApps(){
 				subparagraph2.innerHTML = value;
 				subparagraph2.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph2);
+				var subparagraph3 = document.createElement('p');
+				subparagraph3.innerHTML = "Not running";
+				subparagraph3.className = "app-sub-paragraph";
+				paragraph.appendChild(subparagraph3);
 				entry.appendChild(paragraph);
 				var buttonGroupDiv = document.createElement('div');
 				buttonGroupDiv.className = "btn-group";
@@ -251,6 +255,10 @@ function finishFinalizeRecipe(recipename){
 	subparagraph2.innerHTML = value;
 	subparagraph2.className = "app-sub-paragraph";
 	paragraph.appendChild(subparagraph2);
+	var subparagraph3 = document.createElement('p');
+	subparagraph3.innerHTML = "Not running";
+	subparagraph3.className = "app-sub-paragraph";
+	paragraph.appendChild(subparagraph3);
 	entry.appendChild(paragraph);
 	var buttonGroupDiv = document.createElement('div');
 	buttonGroupDiv.className = "btn-group";
@@ -325,6 +333,10 @@ function finishSaveNewApp(filename){
 				subparagraph2.innerHTML = value;
 				subparagraph2.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph2);
+				var subparagraph3 = document.createElement('p');
+				subparagraph3.innerHTML = "Not running";
+				subparagraph3.className = "app-sub-paragraph";
+				paragraph.appendChild(subparagraph3);
 				entry.appendChild(paragraph);
 				var buttonGroupDiv = document.createElement('div');
 				buttonGroupDiv.className = "btn-group";
@@ -386,8 +398,34 @@ function loadApp(){
 	//load app from list with given directory
 }
 
+var runTimeIntervals = {};
+
 function activateApp(button){
 	//activate the currently selected app
+
+	//display as running
+	var runningDisplay = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[2];
+	var runTime = 0;
+	var runTimeInterval = setInterval(function(){ 
+		runningDisplay.innerHTML = "Running for " + runTime + " seconds";
+		runTime += 1;
+	}, 1000);
+	var key = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
+	runTimeIntervals[key] = runTimeInterval;
+
+	//App has been running for 5 minutes
+	setTimeout(function(){
+		if (runTime >= 300) {
+			runningDisplay.innerHTML = "App ended due to running over 5 minutes";
+		}
+		else {
+			runningDisplay.innerHTML = "Not running";
+		}
+		clearInterval(runTimeInterval);
+		//toggle button to be an activate button once again
+		button.onclick = function() { activateApp(this); }
+		button.innerHTML = "Activate";
+	}, 300000);
 
 	//toggle button to be a stop button
 	button.onclick = function() { stopApp(this); }
@@ -396,6 +434,12 @@ function activateApp(button){
 
 function stopApp(button){
 	//stop the currently selected app
+
+	//display as not running
+	var key = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
+	clearInterval(runTimeIntervals[key]);
+	var runningDisplay = button.parentNode.parentNode.getElementsByClassName('app-sub-paragraph')[2];
+	runningDisplay.innerHTML = "Not running";
 
 	//toggle button to be an activate button
 	button.onclick = function() { activateApp(this); }
