@@ -2,15 +2,22 @@ var net = require('net');
 
 let clients_pool = {};
 
-const createClient = (ip_addr, message, relationship_type = null, secondIp_addr = null, secondService = null)
+const createClient = (ip_addr, message, relationship_type = null, secondIp_addr = null, secondService = null) =>
 {
-	var client = clients_pool[ip_addr] ? clients_pool[ip_addr] : new net.Socket();
-	clients_pool[ip_addr] = client;
-	client.connect(6668, ip_addr, function () {
+	var client = null;
+	if(clients_pool[ip_addr]) {
+		client = clients_pool[ip_addr];
+		clients_pool[ip_addr] = client;
+	}
+	else {
+		 client =  new net.Socket();
+		 client.connect(6668, ip_addr, function () {
 			console.log('Connected');
 			client.write(message);
-		}
-	);
+			}
+		);
+	}
+	
 
 	client.on('data', function (data) {
 		var buffer = Buffer.alloc(2048);
@@ -67,31 +74,32 @@ function testRequestService() {
 	client.write(message);
 }
 
-
-let app = [];
-
-
 function handleRelationship(param) {
 	if(param.type != "servicesRelationship") {
 		console.log("not relationship type");
-		return;
+		return false;
 	}
 	let relationship_type = param.relationship["Type"];
 	const message = makeMessage(secondService["Thing ID"], secondService["Space ID"], secondService["Name"], "");
 	createClient(param.first_service["IP"], message, relationship_type, param.second_service["IP"], param.second_service);
+	return true;
 }
 
 function handleService(param) {
 	if(param["Tweet Type"] != "Service") {
 		console.log("not service type");
-		return;
+		return false;
 	}
 	const message = makeMessage(param["Thing ID"], param["Space ID"], param["Name"], "");
 	createClient(param["IP"], message);
+	return true;
 }
+const runApp = (app)=> {
+	app.forEach(param => {
+		if(!handleRelationship(param))
+			if(!handleService(param)) 
+				console.error("undefined tweet");
+	});
+};
 
-app.forEach(param => {
-	if(!handleRelationship(param))
-		if(!handleService(param))
-			console.error("undefined tweet");
-});
+exports.runApp = runApp;

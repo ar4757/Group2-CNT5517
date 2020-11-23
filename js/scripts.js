@@ -213,12 +213,14 @@ function updateRecipe(){
 	//this function will require the drag and drop feature.
 
 }
-
-function callServices(serviceData) {
+function callServices(app) {
+	app = JSON.stringify(app);
 	$.ajax({
 		type: 'POST',
 		url: 'http://' + getHostIP() + ':3000/callServices',
-		data: serviceData,
+		data: app,
+		contentType: 'application/json',
+		crossDomain: true,
 		success: function(response) {
 			console.log("callServices");
 		},
@@ -426,9 +428,11 @@ function loadApp(){
 
 function activateApp(button){
 	//Placeholder - replace with the recipe's data
-	var serviceData = {"thing_id": "", "space_id": "", "service_name": "", "service_input": ""};
+	//var serviceData = {"thing_id": "", "space_id": "", "service_name": "", "service_input": ""};
 	//activate services in the currently selected app
-	callServices(serviceData);
+	
+	//use recipe_list as temporary test, should replace this with any app
+	callServices(recipe_list);
 	//update display
 	activateAll(button);
 }

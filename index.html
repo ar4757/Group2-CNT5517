@@ -376,9 +376,8 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("text");
     if(document.getElementById("servicesTab").className == "tablinks active" && chosenServices.includes(data)==false){
         chosenServices.push(data);
-        for(var i = 0; i < chosenServices.length; i++) {
-            putServiceToRecipe(chosenServices[i]);
-        }
+            putServiceToRecipe(data);
+        
         var newDiv = document.createElement("div");
         newDiv.id = "service";
         newDiv.className = "draggable";
@@ -389,9 +388,8 @@ function drop(ev) {
     }
     if(document.getElementById("relationshipsTab").className == "tablinks active" && chosenRelationships.includes(data)==false){
         chosenRelationships.push(data);
-        for(var i = 0; i < chosenRelationships.length; i++) {
-            putRelationshipToRecipe(chosenRelationships[i]);
-        }
+            putRelationshipToRecipe(data);
+        
         var newDiv = document.createElement("div");
         newDiv.id = "relationship";
         newDiv.className = "draggable";

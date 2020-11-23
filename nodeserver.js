@@ -8,10 +8,21 @@ const process = require("process");
 var express = require("express");
 var bodyParser = require('body-parser');
 var app = express();
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 var cors = require('cors');
 app.use(cors());
+
+const runApp = require('./callService.js').runApp;
+
+
+app.post('/callServices', (req, res) => {
+	console.log("call service");
+	const app = req.body;
+	runApp(app);
+	res.send('okay');
+});
 
 app.get('/tweets', function(req, res) {
 	var tweet_array = [];
@@ -152,18 +163,3 @@ app.post('/changeDirectory', function(req, res) {
 	res.end(JSON.stringify(response));
 });
 
-app.post('/callServices', function(req, res) {
-	response = {
-		thing_id : req.body.thing_id,
-		space_id : req.body.space_id,
-		service_name : req.body.service_name,
-		service_input : req.body.service_input
-	};
-	
-	//Example of using a variable received from the request
-	console.log("Here is the thing id: " + response.thing_id);
-	
-	//run callService.js code here using any service info that was given
-
-	res.end(JSON.stringify(response));
-});
