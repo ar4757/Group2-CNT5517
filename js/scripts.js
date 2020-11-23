@@ -121,8 +121,16 @@ import {putRelationship, putService, recipe_list}  from "../tabs/recipe.js";
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
 	var elem = document.getElementById("Services");
-	var services_display_html = ""
+	var services_display_html = "<h4>Filter based on:</h4>"
 	var things_id_to_display = null;
+	//filter based on things
+	const things_info_json = getThingsInfo();
+	Object.keys(things_info_json).forEach(thing_name => {
+		console.log("here1");
+		services_display_html += '<input type="checkbox" id="'+ thing_name +'">' + 
+		'<label for="'+ thing_name + '">' + thing_name + '</label>';
+	});
+	services_display_html += '<br><br><h4>Services Available:</h4>';
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 	FilteredServices_list.forEach(service => {
 		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +service["Name"] + '</div>' + '</p>' + "belong to " + service["Thing ID"] + '</p>';
@@ -147,8 +155,21 @@ function updateThings(){
 
 function updateRelationships(){
 	var elem = document.getElementById("Relationships");
-	var relationship_display_html = "";
+	var relationship_display_html = "<h4>Filter based on:</h4>";
 	var things_id_to_display = null;
+
+	//filter based on things
+	const things_info_json = getThingsInfo();
+	Object.keys(things_info_json).forEach(thing_name => {
+		console.log("here1");
+		relationship_display_html += '<input type="checkbox" id="'+ thing_name +'">' + 
+		'<label for="'+ thing_name + '">' + thing_name + '</label>';
+	});
+	relationship_display_html += '<br><br><h4>Relationships Available:</h4>';
+
+	// drop down services
+	const FilteredServices_list = getFilteredServices(things_id_to_display);
+
 	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
 	filteredServicesRelationship_list.forEach(servicesRelationship => {
 		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +servicesRelationship.relationship["Name"] + '</div>';
