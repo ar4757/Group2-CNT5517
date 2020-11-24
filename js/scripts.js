@@ -53,8 +53,8 @@ function move() {
 			loadingBlockade.style.opacity = "0";
 			loadingBlockade.style.zIndex = "-1";
 		} else {
-			//Increment by 0.05 every 10 milliseconds. This means the bar will fill after 40 seconds
-			width += 0.025;
+			//Increment by 0.016666 every 10 milliseconds. This means the bar will fill after 60 seconds
+			width += (0.05 / 3);
 			elem.style.width = width + "%";
 		}
 		}
@@ -215,12 +215,12 @@ function updateRecipe(){
 }
 function callServices(app) {
 	app = JSON.stringify(app);
+	console.log("Call services data: " + app);
 	$.ajax({
 		type: 'POST',
 		url: 'http://' + getHostIP() + ':3000/callServices',
 		data: app,
 		contentType: 'application/json',
-		crossDomain: true,
 		success: function(response) {
 			console.log("callServices");
 		},
@@ -269,8 +269,9 @@ function finishFinalizeRecipe(recipename){
 	var key = recipename;
 
 	//Placeholder - replace with the recipe content (services to be called)
-	const recipeContent = recipe_list;
+	const recipeContent = JSON.stringify(recipe_list);
 	var value = recipeContent;
+	console.log("Recipe content is " + recipeContent);
 	var recipeList = document.getElementById("recipeList");
 	var entry = document.createElement('li');
 	var paragraph = document.createElement('p');
@@ -280,7 +281,8 @@ function finishFinalizeRecipe(recipename){
 	subparagraph1.className = "app-sub-paragraph";
 	paragraph.appendChild(subparagraph1);
 	var subparagraph2 = document.createElement('p');
-	subparagraph2.innerHTML = value;
+	subparagraph2.innerHTML = "App that calls " + JSON.parse(value).length + " service(s)";
+	subparagraph2.dataset.content = value;
 	subparagraph2.className = "app-sub-paragraph";
 	paragraph.appendChild(subparagraph2);
 	var subparagraph3 = document.createElement('p');
@@ -292,7 +294,7 @@ function finishFinalizeRecipe(recipename){
 	buttonGroupDiv.className = "btn-group";
 	buttonGroupDiv.id = "app-btn-group";
 	var saveButton = document.createElement('button');
-	saveButton.onclick = function() { saveNewApp() };
+	saveButton.onclick = function() { saveNewApp(this) };
 	saveButton.innerHTML = "Save";
 	saveButton.className = "button";
 	buttonGroupDiv.appendChild(saveButton);
@@ -317,7 +319,13 @@ function finishFinalizeRecipe(recipename){
 
   hidePopup();
 }
-function saveNewApp(){
+
+var appContent = null;
+
+function saveNewApp(button){
+	var entry = button.parentNode.parentNode;
+	appContent = entry.getElementsByClassName('app-sub-paragraph')[1].dataset.content;
+
 	//request name for app
 	//popup here
 	const showPopup = () => {
@@ -358,7 +366,8 @@ function finishSaveNewApp(filename){
 				subparagraph1.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph1);
 				var subparagraph2 = document.createElement('p');
-				subparagraph2.innerHTML = value;
+				subparagraph2.innerHTML = "App that calls " + JSON.parse(value).length + " service(s)";
+				subparagraph2.dataset.content = value;
 				subparagraph2.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph2);
 				var subparagraph3 = document.createElement('p');
@@ -387,10 +396,8 @@ function finishSaveNewApp(filename){
 				console.log(xhr.responseText);
 			}
 		});
-	};
+	}
 
-	//const appContent = document.querySelector('.ide-text');
-	const appContent = "Call service 1";
 	downloadToFile(appContent, filename.value, 'text/plain');
 
 	const hidePopup = () => {
@@ -432,7 +439,9 @@ function activateApp(button){
 	//activate services in the currently selected app
 	
 	//use recipe_list as temporary test, should replace this with any app
-	callServices(recipe_list);
+	var entry = button.parentNode.parentNode;
+	var recipeContent = entry.getElementsByClassName('app-sub-paragraph')[1].dataset.content;
+	callServices(recipeContent);
 	//update display
 	activateAll(button);
 }

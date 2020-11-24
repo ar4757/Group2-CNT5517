@@ -16,7 +16,6 @@ app.use(cors());
 
 const runApp = require('./callService.js').runApp;
 
-
 app.post('/callServices', (req, res) => {
 	console.log("call service");
 	const app = req.body;
@@ -53,8 +52,8 @@ app.get('/tweets', function(req, res) {
 		tweet_array.push(tweet);
 	});
 
-	//Wait 40 seconds to load tweets
-	const tweetFetchTime = 40000;
+	//Wait 60 seconds to load tweets
+	const tweetFetchTime = 60000;
 	setTimeout(function() {
 		res.json(tweet_array);
 	}, tweetFetchTime);
