@@ -140,7 +140,7 @@ function updateServices(){
 	services_display_html += '<br><br><h4>Services Available:</h4>';
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 	FilteredServices_list.forEach(service => {
-		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '&nbsp;</div>' + '<div style="display:inline-block">' + "belongs to " + service["Thing ID"] + '</div><br>';
+		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '</div>' + '<div style="display:inline-block">' + " belongs to " + service["Thing ID"] + '</div><br>';
 	});
 	elem.innerHTML = services_display_html;
 }
@@ -307,14 +307,9 @@ function finishFinalizeRecipe(recipename){
 	var key = recipename;
 
 	//Placeholder - replace with the recipe content (services to be called)
-<<<<<<< HEAD
 	const recipeContent = JSON.stringify(recipe_list);
 	var value = recipeContent;
 	console.log("Recipe content is " + recipeContent);
-=======
-	const recipeContent = recipe_list;
-	var value = JSON.stringify(recipeContent);
->>>>>>> 6041232b12efb981b7e7917b6422729a451f34a7
 	var recipeList = document.getElementById("recipeList");
 	var entry = document.createElement('li');
 	var paragraph = document.createElement('p');
