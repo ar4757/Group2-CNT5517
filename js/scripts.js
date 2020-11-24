@@ -141,7 +141,7 @@ function updateServices(){
 	services_display_html += '<br><br><h4>Services Available:</h4>';
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 	FilteredServices_list.forEach(service => {
-		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +service["Name"] + '</div>' + '</div>' + "belongs to " + service["Thing ID"] + '</div><br>';
+		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '&nbsp;</div>' + '<div style="display:inline-block">' + "belongs to " + service["Thing ID"] + '</div><br>';
 	});
 	elem.innerHTML = services_display_html;
 }
@@ -153,7 +153,7 @@ function updateThings(){
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
 		console.log("here1");
-		things_display_html += '<div class="thing_info">' +thing_name + '</div>' + '<div class="thing_info">' +
+		things_display_html += '<div class="thing_info" style="font-weight: bold;">' +thing_name + '</div>' + '<div class="thing_info">' +
 		'description:' + things_info_json[thing_name] + '</div><br>';
 	});
 
@@ -203,7 +203,7 @@ function updateRelationships(){
 
 	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
 	filteredServicesRelationship_list.forEach(servicesRelationship => {
-		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +servicesRelationship.relationship["Name"] + '</div>';
+		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)" style="font-weight: bold;">' +servicesRelationship.relationship["Name"] + '</div>';
 		let is_first_bounded = servicesRelationship.first_service.is_bounded ? "bounded" : "unbounded";
 		let is_second_bounded = servicesRelationship.second_service.is_bounded ? "bounded" : "unbounded";
 		let unbounded_service1_id = "unbounded_service_" + servicesRelationship.first_service.serviceName;
@@ -231,7 +231,7 @@ function updateRelationships(){
 			relationship_display_html += '</select><br><br>';
 		}
 		else{
-			relationship_display_html += '<br>'
+			relationship_display_html += '<br><br>'
 		}
 	});
 	elem.innerHTML = relationship_display_html;
