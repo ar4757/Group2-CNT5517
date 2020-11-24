@@ -37,4 +37,4 @@ Start the website server if apache is not running (on pi)
 sudo service apache2 restart
 ```
 
-Access the site on your computer at http://10.254.254.64/
+Access the site on your computer at your Raspberry Pi's IP address (Default: http://10.254.254.64/)
