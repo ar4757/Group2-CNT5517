@@ -17,7 +17,6 @@ app.use(cors());
 const runApp = require('./callService.js').runApp;
 
 app.post('/callServices', (req, res) => {
-	console.log("call service");
 	const app = req.body;
 	runApp(app);
 	res.send('okay');

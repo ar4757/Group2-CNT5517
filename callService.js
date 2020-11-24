@@ -13,18 +13,16 @@ const createClient = (ip_addr, message, relationship_type = null, secondIp_addr 
 		 client =  new net.Socket();
 		 client.connect(6668, ip_addr, function () {
 			console.log('Connected');
-			client.write(message);
 			}
 		);
 	}
+	client.write(message);
 	
 
 	client.on('data', function (data) {
 		var buffer = Buffer.alloc(2048);
 		console.log(buffer.toString('utf8', 0, data));
 		var json = JSON.parse(data)
-		console.log(json);
-		console.log(json['Service Result']);
 		let result = json['Service Result'];
 		if(relationship_type != null) {
 			switch (relationship_type) {
@@ -80,8 +78,8 @@ function handleRelationship(param) {
 		return false;
 	}
 	let relationship_type = param.relationship["Type"];
-	const message = makeMessage(secondService["Thing ID"], secondService["Space ID"], secondService["Name"], "");
-	createClient(param.first_service["IP"], message, relationship_type, param.second_service["IP"], param.second_service);
+	const message = makeMessage(param.first_service.content["Thing ID"], param.first_service.content["Space ID"], param.first_service.content["Name"], "");
+	createClient(param.first_service.content["IP"], message, relationship_type, param.second_service.content["IP"], param.second_service.content);
 	return true;
 }
 
