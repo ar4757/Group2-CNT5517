@@ -160,7 +160,26 @@ function putRelationshipToRecipe(relationship_name) {
 }
 function updateRecipe(){
 	//this function will require the drag and drop feature.
+}
 
+//get any image files associated with the working dir.
+function collectImages(){
+		var imageList = document.getElementById("imageList");
+		$.ajax({			type: 'GET',
+			url: 'http://10.254.254.64:3000/getApps',
+			success: function(response) {
+				console.log(response);
+				//Array of app objects is in response
+
+				//apend if is image type.
+				for (const [key, value] of Object.entries(response)) {
+					//files are in JSON format, figure this out tomorrow
+				}
+			},
+			error: function(xhr, status, err) {
+			  console.log(xhr.responseText);
+			}
+		   });
 }
 
 function changeWorkingDirectory(){
@@ -190,6 +209,7 @@ function saveNewApp(){
 
 	showPopup();
 }
+
 
 function nameFile(){
 	//check that this name is valid
@@ -258,6 +278,32 @@ function finishSaveNewApp(filename){
 
 	hidePopup();
 }
+
+//similar to above.
+function saveImage(filename){
+	const downloadToFile = (content, filename, contentType) => {
+		formData = {"content": content, "filename": filename, "contentType": contentType};
+		$.ajax({
+			type: 'POST',
+			url: 'http://10.254.254.64:3000/saveApp',
+			data : formData,
+			success: function(response) {
+				$(document).ready(function(){
+					var image = new Image();
+					image.src = filename;
+					$('#imageList').append(image);
+				})
+			},
+			error: function(xhr, status, err) {
+				console.log("Failed to save image to cwd");
+			}
+		});
+	}
+
+	downloadToFile(filename,filename.value, "image");
+	alert("Saved " + filename.value + " to working directory.");
+}
+
 
 function deleteApp(button){
 	//remove app from list of working apps.
