@@ -13,8 +13,8 @@ const dummy_tweets = [{ "Tweet Type" : "Identity_Thing","Thing ID" : "MySmartThi
   { "Tweet Type" : "Service","Name" : "turnLED","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","API" : "turnLaser:[isTurnOn,int, NULL]:(NULL)","Type" : "Action","AppCategory" : "Lighting","Description" : "","Keywords" : "turn on of turn off the laser" },
   { "Tweet Type" : "Service","Name" : "push","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","API" : "turnLaser:[NULL,NULL, NULL]:(int)","Type" : "Action","AppCategory" : "Lighting","Description" : "","Keywords" : "turn on of turn off the laser" },
   { "Tweet Type" : "Service","Name" : "readTiltSwitch","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","API" : "turnLaser:[NULL,NULL, NULL]:(int)","Type" : "Action","AppCategory" : "Lighting","Description" : "","Keywords" : "turn on of turn off the laser" },
-  { "Tweet Type" : "Relationship","Name" : "Morning Breakfast","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "drive","Category" : "Cooperative","Description" : "","FS name" : "push", "SS name" : "turnLED" },
-  { "Tweet Type" : "Relationship","Name" : "Coffee Machine","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "drive","Category" : "Cooperative","Description" : "","FS name" : "readTiltSwitch", "SS name" : "turnLaser" }
+  { "Tweet Type" : "Relationship","Name" : "Morning Breakfast","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "drive","Category" : "Cooperative","Description" : "","FS name" : "readSth", "SS name" : "turnLED" },
+  { "Tweet Type" : "Relationship","Name" : "Coffee Machine","Thing ID" : "MySmartThing1","Entity ID" : "laser_emitter","Space ID" : "HeranSmartSpace","Vendor" : "","Type" : "drive","Category" : "Cooperative","Description" : "","FS name" : "readTiltSwitch", "SS name" : "pushSth" }
 ];
 
 export {

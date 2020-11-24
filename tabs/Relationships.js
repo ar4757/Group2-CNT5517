@@ -13,6 +13,7 @@ function service (serviceName, tweet = null, isBounded = false){
     this.is_bounded = isBounded;
     this.content = tweet;
     this.serviceName = serviceName;
+    this.origin_serviceName = serviceName;
 }
 
 
@@ -30,10 +31,10 @@ const ServicesRelationship = function(relationship_tweet) {
 
 
 //bind a unbounded service to a bounded service
-const bindService = (unbounded_service, service_tweet) => {
+const bindServiceToUbounded = (unbounded_service, service_tweet) => {
     unbounded_service.is_bounded = true;
     unbounded_service.content = service_tweet;
-    unbounded_service.name = service_tweet["name"];
+    unbounded_service.serviceName = service_tweet["Name"];
 };
 
 //create ServicesRelationship instances for all relationship tweets
@@ -56,5 +57,5 @@ const getFilteredServicesRelationship = (things_id_to_display = null) => {
     return servicesRelationship_list.filter(servicesRelationship => things_id_to_display[servicesRelationship.relationship["Thing ID"]] > -1);
 };
 
-export {getFilteredServicesRelationship, onload};
+export {getFilteredServicesRelationship, onload, bindServiceToUbounded};
 

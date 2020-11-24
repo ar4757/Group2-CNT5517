@@ -14,6 +14,8 @@ services and relationships into the current app.
 */
 import {parse} from "./parseTweets.js";
 import {onload} from "../tabs/Relationships.js";
+import {dummy_tweets} from "../unit_test/dummyTweets.js";
+
 function load() {
 	move();
 	$.ajax({
@@ -55,6 +57,7 @@ function move() {
 		} else {
 			//Increment by 0.05 every 10 milliseconds. This means the bar will fill after 40 seconds
 			width += 0.025;
+			//width += 1;
 			elem.style.width = width + "%";
 		}
 		}
@@ -121,7 +124,7 @@ function updateApps(){
 }
 import {getThingsInfo} from "../tabs/Things.js";
 import {getFilteredServices} from "../tabs/Services.js";
-import {getFilteredServicesRelationship} from "../tabs/Relationships.js";
+import {getFilteredServicesRelationship, bindServiceToUbounded} from "../tabs/Relationships.js";
 import {putRelationship, putService, recipe_list}  from "../tabs/recipe.js";
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
@@ -158,6 +161,29 @@ function updateThings(){
 	console.log("update things", things_display_html);
 }
 
+
+function bindService(sel) {
+	let bind_service_name = sel.options[sel.selectedIndex].text;
+	const bind_service = getFilteredServices().find(service => service["Name"] == bind_service_name);
+	const unbounded_service_name = sel.id.substring("dropdown_".length);
+	
+	let unbounded_service = null;
+	for(const relationship of getFilteredServicesRelationship()) {
+		if(relationship.first_service.origin_serviceName == unbounded_service_name) {
+			unbounded_service = relationship.first_service;
+			break;
+		}
+		if(relationship.second_service.origin_serviceName == unbounded_service_name) {
+			unbounded_service = relationship.second_service;
+			break;
+		}
+	}
+	bindServiceToUbounded(unbounded_service, bind_service);
+	let ele = document.getElementById('unbounded_service_' + unbounded_service_name);
+	ele.innerHTML = ele.innerHTML.replace("unbounded", "bounded");
+	
+}
+
 function updateRelationships(){
 	var elem = document.getElementById("Relationships");
 	var relationship_display_html = "<h4>Filter based on:</h4>";
@@ -180,9 +206,11 @@ function updateRelationships(){
 		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)">' +servicesRelationship.relationship["Name"] + '</div>';
 		let is_first_bounded = servicesRelationship.first_service.is_bounded ? "bounded" : "unbounded";
 		let is_second_bounded = servicesRelationship.second_service.is_bounded ? "bounded" : "unbounded";
-		relationship_display_html += '<div style="display:inline-block;padding: 0px 5px;">' + "has " + servicesRelationship.first_service.serviceName + " " + is_first_bounded + " service" + '</div>';
+		let unbounded_service1_id = "unbounded_service_" + servicesRelationship.first_service.serviceName;
+		relationship_display_html += '<div id = ' + unbounded_service1_id +' style="display:inline-block;padding: 0px 5px;">' + "has " + servicesRelationship.first_service.serviceName + " " + is_first_bounded + " service" + '</div>';
 		if(!servicesRelationship.first_service.is_bounded){
-			relationship_display_html += '<select id="dropdown" style="display:inline-block"><option selected disabled hidden>Bind a service</option>';
+			let id = "dropdown_" + servicesRelationship.first_service.serviceName;
+			relationship_display_html += '<select id=' + id +' onChange="bindService(this);" style="display:inline-block"><option selected disabled hidden>Bind a service</option>';
 			FilteredServices_list.forEach(service => {
 				relationship_display_html += '<option value="'+service["Name"]+'">'+ service["Name"] + '</option>';
 			});
@@ -191,9 +219,12 @@ function updateRelationships(){
 		else{
 			relationship_display_html += '<br>'
 		}
-		relationship_display_html += '<div style="display:inline-block;padding: 0px 5px;">' + "has " + servicesRelationship.second_service.serviceName +  " " + is_second_bounded +  " service" + '</div>';
+		let unbounded_service2_id = "unbounded_service_" + servicesRelationship.second_service.serviceName;
+
+		relationship_display_html += '<div id = ' + unbounded_service2_id +' style="display:inline-block;padding: 0px 5px;">' + "has " + servicesRelationship.second_service.serviceName +  " " + is_second_bounded +  " service" + '</div>';
 		if(!servicesRelationship.second_service.is_bounded){
-			relationship_display_html += '<select id="dropdown" style="display:inline-block"><option selected disabled hidden>Bind a service</option>';
+			let id = "dropdown_" + servicesRelationship.second_service.serviceName;
+			relationship_display_html += '<select id=' + id +' onChange="bindService(this);" style="display:inline-block"><option selected disabled hidden>Bind a service</option>';
 			FilteredServices_list.forEach(service => {
 				relationship_display_html += '<option value="'+service["Name"]+'">'+ service["Name"] + '</option>';
 			});
@@ -583,6 +614,7 @@ function stopAll(button){
 	}
 }
 
+
 window.move = move;
 window.updateApps = updateApps;
 window.updateServices = updateServices;
@@ -602,5 +634,6 @@ window.putRelationshipToRecipe = putRelationshipToRecipe;
 window.nameFile = nameFile;
 window.nameRecipe = nameRecipe;
 window.callServices = callServices;
+window.bindService = bindService;
 export {load}
 
