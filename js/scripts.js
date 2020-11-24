@@ -15,7 +15,8 @@ services and relationships into the current app.
 import {parse} from "./parseTweets.js";
 import {onload} from "../tabs/Relationships.js";
 import {dummy_tweets} from "../unit_test/dummyTweets.js";
-
+//parse(dummy_tweets);
+//onload();
 function load() {
 	move();
 	$.ajax({
@@ -57,6 +58,7 @@ function move() {
 		} else {
 			//Increment by 0.016666 every 10 milliseconds. This means the bar will fill after 60 seconds
 			width += (0.05 / 3);
+			//width += 1;
 			elem.style.width = width + "%";
 		}
 		}
@@ -252,7 +254,7 @@ function updateRecipe(){
 
 }
 function callServices(app) {
-	app = JSON.stringify(app);
+	//app = JSON.stringify(app);
 	console.log("Call services data: " + app);
 	$.ajax({
 		type: 'POST',
@@ -479,6 +481,7 @@ function activateApp(button){
 	//use recipe_list as temporary test, should replace this with any app
 	var entry = button.parentNode.parentNode;
 	var recipeContent = entry.getElementsByClassName('app-sub-paragraph')[1].dataset.content;
+	console.log("recipeContent", recipeContent);
 	callServices(recipeContent);
 	//update display
 	activateAll(button);
