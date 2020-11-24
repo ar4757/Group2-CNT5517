@@ -8,10 +8,19 @@ const process = require("process");
 var express = require("express");
 var bodyParser = require('body-parser');
 var app = express();
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 var cors = require('cors');
 app.use(cors());
+
+const runApp = require('./callService.js').runApp;
+
+app.post('/callServices', (req, res) => {
+	const app = req.body;
+	runApp(app);
+	res.send('okay');
+});
 
 app.get('/tweets', function(req, res) {
 	var tweet_array = [];
@@ -32,14 +41,18 @@ app.get('/tweets', function(req, res) {
 
 	socket.on("message", function(message, rinfo) {
 		//Replace invalid json from atlas with corrected escaped quotes
-		var messageFormatted = message.toString().replace(/\["([A-z0-9]*)"/, "[\\\"$1\\\"");
-		messageFormatted = messageFormatted.replace(/\("([A-z0-9]*)"/, "(\\\"$1\\\"");
+        var messageFormatted = message.toString().replace(/\[[^\]]*\]/g, function(match) {
+            return match.replace(/([^\\])"/g, "$1\\\"");
+        });
 		console.info(`Tweet from: ${rinfo.address}:${rinfo.port} - ${messageFormatted}`);
-	tweet_array.push(JSON.parse(messageFormatted));
+		let tweet = JSON.parse(messageFormatted);
+		tweet["IP"] = rinfo.address;
+		tweet["port"] = rinfo.port;
+		tweet_array.push(tweet);
 	});
 
-	//Wait 40 seconds to load tweets
-	const tweetFetchTime = 40000;
+	//Wait 60 seconds to load tweets
+	const tweetFetchTime = 60000;
 	setTimeout(function() {
 		res.json(tweet_array);
 	}, tweetFetchTime);
@@ -147,3 +160,4 @@ app.post('/changeDirectory', function(req, res) {
 	//convert the response in JSON format
 	res.end(JSON.stringify(response));
 });
+

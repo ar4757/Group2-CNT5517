@@ -18,7 +18,7 @@
     <body>
     <!--Progress bar while starting up the application (recommended by professor)-->
 <div class="header">
-    <h1>CIS4930-CNT5517 Group 2 </h1>
+    <h1>CIS4930-CNT5517 Group 2</h1>
 </div>
 
 <div id="progressBar">
@@ -28,7 +28,7 @@
 <div id="loadingBlockade"></div>
 
     <script type="module">
-        import {load} from "./js/scripts.js";
+        import {load} from "./js.scripts.js";
         load();
     </script>
 
@@ -42,16 +42,20 @@
     </div>
 
     <!-- Tab content -->
-<div id="Things" class="tabcontent">
-  <div class="w3-container w3-blue">
-  <h3>Things</h3>
-  </div>
-</div>
+    <div id="Things" class="tabcontent">
+    <div class="w3-container w3-blue">
+    <h3>Things</h3>
+    </div>
+    <p>list</p>
+    </div>
 
-<div id="Services" class="tabcontent">
-  <div class="w3-container w3-blue">
-  <h3>Services</h3>
-  </div>
+    <div id="Services" class="tabcontent">
+    <div class="w3-container w3-blue">
+    <h3>Services</h3>
+    </div>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Service 1</div>
+<div class="draggable" draggable="true" ondragstart="drag(event)">Service 2</div>
+<div class="draggable" draggable="true" ondragstart="drag(event)">Service 3</div>
 </div>
 
 <div id="Relationships" class="tabcontent">
@@ -59,7 +63,7 @@
     <h3>Relationships</h3>
     </div>
     <div class="draggable" draggable="true" ondragstart="drag(event)">Relationship 1</div>
-    <div class="draggable" draggable="true" ondragstart="drag(event)">Relationship 2</div>
+<div class="draggable" draggable="true" ondragstart="drag(event)">Relationship 2</div>
 </div>
 
 <div id="Recipe" class="tabcontent">
@@ -68,42 +72,27 @@
     </div>
     <br>
     <button onclick="clearText()">Clear Recipe</button>
-    <div style="width: 100%;">
-      <div style="width: 40%; float: left">
-        <h3>Services</h3>
-        <div id="servicesList"></div>
-        <h3>Relationships</h3>
-        <div id="relationshipsList"></div>
-      </div>
-      <div id="appRecipe" style="width: 60%; float: left">
-        <h3>APP =</h3>
-        <div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
-        <div id="service1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
-        <h3>+ CONDITIONAL EVAL:</h3>
-        <h4>IF</h4>
-        <div id="relationship2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
-        <div id="service2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
-        <h4>THEN</h4>
-        <div id="relationship3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
-        <div id="service3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
-      </div>
+<div style="width: 100%;">
+    <div style="width: 40%; float: left">
+    <h3>Services</h3>
+    <div id="servicesList"></div>
+    <h3>Relationships</h3>
+    <div id="relationshipsList"></div>
     </div>
-  </div>
-  </div>
-
-    <!-- Text box for adding new app in the current file. Upon clicking save,
-    a textbox should apper to name the file. -->
-
-    <div class="popupRecipe">
-    <div class="w3-container" id="recipePopup">
-    <p>
-    <label>Enter Recipe Name</label>
-    <input class="w3-input" id="recipeText" type="text" value="">
-    <input class="sub" type="submit" onClick="nameRecipe()">
-    </p>
+    <div id="appRecipe" style="width: 60%; float: left">
+<h3>APP =</h3>
+<div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+    <div id="service1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+    <h3>+ CONDITIONAL EVAL:</h3>
+<h4>IF</h4>
+<div id="relationship2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+    <div id="service2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+    <h4>THEN</h4>
+    <div id="relationship3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
+    <div id="service3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
     </div>
     </div>
-</div>
+    </div>
 
     <div id="Apps" class="tabcontent">
     <div class="w3-container w3-blue">
@@ -119,9 +108,19 @@
     <input class="sub" type="submit" onClick="changeWorkingDirectory(); return false;">
     </p>
     </form>
+    <!-- These function need be added to js/app.js -->
+    <div class="btn-group" id="ide-btn-group">
+    <!--This function should only be accessible in a certain program state.-->
+<button class="button" onClick="saveNewApp()">Save</button>
+    <button class="button" onClick="uploadNewApp()">Upload</button>
+
+    </div>
 
     <!-- Text box for adding new app in the current file. Upon clicking save,
       a textbox should apper to name the file. -->
+    <div class="ide">
+    <textarea placeholder="Code goes here" class="ide-text" cols="30" rows="12"></textarea>
+    </div>
 
     <div class="popup">
     <div class="w3-container" id="filenamePopup">
@@ -136,28 +135,9 @@
     <!-- List of apps that have currently been uploaded or saved.
         These will include 'objects' that are grabbed from a JS function. -->
     <div class="available-app-list">
-        <p>Available apps from working directory: </p>
-        <ol id = "appList">
-        </ol>
-    </div>
-
-    <div class="saved-images">
-      <p>Saved images</p>
-      <ol id="imageList"></ol>
-    </div>
-
-  </div>
-
-  <div class="available-recipe-list">
-        <p>Available recipes from this session: </p>
-        <ol id = "recipeList">
-        </ol>
-    </div>
-
-    <div class="status-list">
-        <p>Status List: </p>
-        <ol id = "statusList">
-        </ol>
+    <p>Available apps: </p>
+<ol id = "appList">
+    </ol>
     </div>
 
     </div>
@@ -195,40 +175,16 @@ body{
     float:left;
 }
 
-.available-recipe-list{
-    width:50%;
-    float:left;
-}
-
-.available-app-list{
-    width:50%;
-    float:left;
-}
-
-.status-list{
-
-}
-
 .list-entry{
     padding-bottom: 20px;
     margin-bottom: 10px;
     border-style:solid;
-    width:400px;
-    height:200px;
-}
-
-.status-list-entry{
-    padding-bottom: 20px;
-    margin-bottom: 10px;
-    border-style:solid;
-    width:400px;
-    height:100px;
+    width:50%;
 }
 
 #app-btn-group{
     margin-left:20%;
     padding-top:22px;
-    padding-left:40%;
 }
 
 .btn-group .button{
@@ -322,21 +278,8 @@ body{
     text-align: center;
     border: 3px solid black;
     padding: 5px;
-    width: 200px;
+    width: 20%;
     height: 50px;
-}
-
-.draggable {
-  cursor: grab;
-}
-
-.recipeBox {
-  display: inline-block;
-  text-align: center;
-  border: 3px solid black;
-  padding: 5px;
-  width: 20%;
-  height: 50px;
 }
 </style>
 
@@ -397,8 +340,9 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("text");
     if(document.getElementById("servicesTab").className == "tablinks active" && chosenServices.includes(data)==false){
         chosenServices.push(data);
-            putServiceToRecipe(data);
-        
+        for(var i = 0; i < chosenServices.length; i++) {
+            putServiceToRecipe(chosenServices[i]);
+        }
         var newDiv = document.createElement("div");
         newDiv.id = "service";
         newDiv.className = "draggable";
@@ -409,8 +353,9 @@ function drop(ev) {
     }
     if(document.getElementById("relationshipsTab").className == "tablinks active" && chosenRelationships.includes(data)==false){
         chosenRelationships.push(data);
-            putRelationshipToRecipe(data);
-        
+        for(var i = 0; i < chosenRelationships.length; i++) {
+            putRelationshipToRecipe(chosenRelationships[i]);
+        }
         var newDiv = document.createElement("div");
         newDiv.id = "relationship";
         newDiv.className = "draggable";
@@ -444,5 +389,4 @@ function clearText() {
     document.getElementById("service3").innerHTML = "SERVICE";
 }
 </script>
-
 
