@@ -76,6 +76,7 @@
         <div id="relationshipsList"></div>
       </div>
       <div id="appRecipe" style="width: 60%; float: left">
+        <button onclick="finalizeRecipe()">Finalize Recipe</button>
         <h3>APP =</h3>
         <div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
         <div id="service1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
@@ -145,8 +146,6 @@
       <p>Saved images</p>
       <ol id="imageList"></ol>
     </div>
-
-  </div>
 
   <div class="available-recipe-list">
         <p>Available recipes from this session: </p>
