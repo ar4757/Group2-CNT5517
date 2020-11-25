@@ -142,7 +142,7 @@ function updateServices(){
 	services_display_html += '<br><br><h4>Services Available:</h4>';
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 	FilteredServices_list.forEach(service => {
-		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '</div>' + '<div style="display:inline-block">' + " belongs to " + service["Thing ID"] + '</div><br>';
+		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '</div>' + '<div style="display:inline-block">' + " &nbsp;belongs to " + service["Thing ID"] + '</div><br>';
 	});
 	elem.innerHTML = services_display_html;
 }

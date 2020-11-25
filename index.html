@@ -77,16 +77,11 @@
   </div>
   <div id="appRecipe" style="width: 60%; float: left">
     <button onclick="finalizeRecipe()">Finalize Recipe</button>
-    <h3>APP =</h3>
-    <div id="relationship1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
-    <div id="service1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
-    <h3>+ CONDITIONAL EVAL:</h3>
-    <h4>IF</h4>
-    <div id="relationship2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
-    <div id="service2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
-    <h4>THEN</h4>
-    <div id="relationship3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP</div>
-    <div id="service3" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">SERVICE</div>
+    <input id="conditionalCheck" type="checkbox" onclick="switchLayout(event)" style="display:inline-block">Conditional Evaluation</input>
+      <div id="recipeLayout">
+        <h3>APP =</h3>
+        <div id="box1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP/SERVICE</div>
+      </div>
   </div>
   </div>
 
@@ -324,6 +319,22 @@ body{
 </style>
 
 <script>
+function switchLayout(ev){
+  if(document.getElementById("conditionalCheck").checked){
+    var box1Contents = document.getElementById("box1").innerHTML;
+    document.getElementById("recipeLayout").innerHTML = '<h3>APP =</h3>' +
+      '<h4>IF</h4>'+
+      '<div id="box1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+box1Contents+'</div>'+
+      '<h4>THEN</h4>'+
+      '<div id="box2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP/SERVICE</div>';
+  }
+  else{
+    var box1Contents = document.getElementById("box1").innerHTML;
+    document.getElementById("recipeLayout").innerHTML = '<h3>APP =</h3>' +
+      '<div id="box1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+box1Contents+'</div>';
+  }
+}
+
 
 function openTab(evt, id) {
     // Declare all variables
@@ -409,9 +420,9 @@ function dropRecipe(ev){
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
     //var data = "dragged";
-    if(ev.target.id.includes(ev.dataTransfer.getData("type"))){
-        ev.target.innerHTML = data;
-    }
+    //if(ev.target.id.includes(ev.dataTransfer.getData("type"))){
+      ev.target.innerHTML = data;
+    //}
 }
 
 function clearText() {
@@ -419,12 +430,8 @@ function clearText() {
     chosenRelationships = [];
     document.getElementById('servicesList').innerHTML = "";
     document.getElementById('relationshipsList').innerHTML = "";
-    document.getElementById("relationship1").innerHTML = "RELATIONSHIP";
-    document.getElementById("service1").innerHTML = "SERVICE";
-    document.getElementById("relationship2").innerHTML = "RELATIONSHIP";
-    document.getElementById("service2").innerHTML = "SERVICE";
-    document.getElementById("relationship3").innerHTML = "RELATIONSHIP";
-    document.getElementById("service3").innerHTML = "SERVICE";
+    document.getElementById("box1").innerHTML = "RELATIONSHIP/SERVICE";
+    document.getElementById("box2").innerHTML = "RELATIONSHIP/SERVICE";
 }
 </script>
 
