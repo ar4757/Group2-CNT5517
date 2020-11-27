@@ -11,20 +11,22 @@ services and relationships into the current app.
 6. Add clear operation for the recipes tab.
 7. Add images?
 
+
 */
 import {parse} from "./parseTweets.js";
 import {onload} from "../tabs/Relationships.js";
 import {dummy_tweets} from "../unit_test/dummyTweets.js";
-//parse(dummy_tweets);
-//onload();
+
+parse(dummy_tweets);
+onload();
 function load() {
 	move();
 	$.ajax({
  	type: 'GET',
  	url: 'http://' + getHostIP() + ':3000/tweets',
  	success: function(response) {
- 		parse(response);
- 		onload();
+ 		//parse(response);
+ 		//onload();
   		console.log(response);
 	//Use the response tweet array here (response contains an array of tweets, see js console);
 	//displayThings(response);
@@ -57,8 +59,8 @@ function move() {
 			loadingBlockade.style.zIndex = "-1";
 		} else {
 			//Increment by 0.016666 every 10 milliseconds. This means the bar will fill after 60 seconds
-			width += (0.05 / 3);
-			//width += 1;
+			//width += (0.05 / 3);
+			width += 1;
 			elem.style.width = width + "%";
 		}
 		}

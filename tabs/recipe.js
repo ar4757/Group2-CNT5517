@@ -24,9 +24,24 @@ function putService(service) {
     console.log(recipe_list);
 }
 
+//prototype for a cond_eval
+const condEval = function(condObj, evalObj) {
+    this.condObj = condBoj;
+    this.evalObj = evalObj;
+    this.type = "condEval";
+};
+
+function putCondEval(cond_eval) {
+    recipe_list.push(cond_eval);
+    console.log(recipe_list);
+}
+
+
 
 export {
-recipe_list,
+    recipe_list,
     putRelationship,
-putService
+    putService,
+    putCondEval,
+    condEval
 }
