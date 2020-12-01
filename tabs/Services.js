@@ -25,7 +25,7 @@ const getFilteredServices = (things_id_to_display) => {
         if(inputType != "NULL") {
             service["Has Input"] = true;
             service["Input"] = 1;
-            console.log("has input", inputType);
+            //console.log("has input", inputType);
         }
         else {
             service["Has Input"] = false;
@@ -34,7 +34,7 @@ const getFilteredServices = (things_id_to_display) => {
     });
 
     if(things_id_to_display == null) {
-        console.log("filtered list", filtered_services_list);
+        //console.log("filtered list", filtered_services_list);
         return filtered_services_list;
     }
     filtered_services_list = Services_list.filter(service => things_id_to_display[service["Thing ID"]] > -1);

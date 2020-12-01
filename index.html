@@ -440,7 +440,7 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("text");
     if(document.getElementById("servicesTab").className == "tablinks active" && chosenServices.includes(data)==false){
         chosenServices.push(data);
-            putServiceToRecipe(data);
+            //putServiceToRecipe(data);
         
         var newDiv = document.createElement("div");
         newDiv.id = "service";
@@ -454,7 +454,7 @@ function drop(ev) {
     }
     if(document.getElementById("relationshipsTab").className == "tablinks active" && chosenRelationships.includes(data)==false){
         chosenRelationships.push(data);
-            putRelationshipToRecipe(data);
+            //putRelationshipToRecipe(data);
         
         var newDiv = document.createElement("div");
         newDiv.id = "relationship";

@@ -12,7 +12,7 @@ function putRelationship(param){
         }
         
         recipe_list.push(param);
-        console.log(recipe_list);
+        //console.log("putRelationship", recipe_list);
         return true;
     }
     return false;
@@ -21,19 +21,19 @@ function putRelationship(param){
 
 function putService(service) {
     recipe_list.push(service);
-    console.log(recipe_list);
+    //console.log("putService",recipe_list);
 }
 
 //prototype for a cond_eval
 const condEval = function(condObj, evalObj) {
-    this.condObj = condBoj;
+    this.condObj = condObj;
     this.evalObj = evalObj;
     this.type = "condEval";
 };
 
 function putCondEval(cond_eval) {
     recipe_list.push(cond_eval);
-    console.log(recipe_list);
+    //console.log("putCondEval", recipe_list);
 }
 
 

@@ -17,16 +17,16 @@ import {parse} from "./parseTweets.js";
 import {onload} from "../tabs/Relationships.js";
 import {dummy_tweets} from "../unit_test/dummyTweets.js";
 
-parse(dummy_tweets);
-onload();
+//parse(dummy_tweets);
+//onload();
 function load() {
 	move();
 	$.ajax({
  	type: 'GET',
  	url: 'http://' + getHostIP() + ':3000/tweets',
  	success: function(response) {
- 		//parse(response);
- 		//onload();
+ 		parse(response);
+ 		onload();
   		console.log(response);
 	//Use the response tweet array here (response contains an array of tweets, see js console);
 	//displayThings(response);
@@ -60,6 +60,7 @@ function move() {
 		} else {
 			//Increment by 0.016666 every 10 milliseconds. This means the bar will fill after 60 seconds
 			width += (0.05 / 3);
+			//width += 1;
 			elem.style.width = width + "%";
 		}
 		}
@@ -127,7 +128,7 @@ function updateApps(){
 import {getThingsInfo} from "../tabs/Things.js";
 import {getFilteredServices} from "../tabs/Services.js";
 import {getFilteredServicesRelationship, bindServiceToUbounded} from "../tabs/Relationships.js";
-import {putRelationship, putService, recipe_list}  from "../tabs/recipe.js";
+import {putRelationship, putService, recipe_list, condEval, putCondEval}  from "../tabs/recipe.js";
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
 	var elem = document.getElementById("Services");
@@ -242,13 +243,19 @@ function updateRelationships(){
 function putServiceToRecipe(service_name) {
 	console.log(service_name);
 	let service = getFilteredServices().find(service => service["Name"] == service_name);
+	if(!service)
+		return false;
 	putService(service);
+	return true;
 }
 
 function putRelationshipToRecipe(relationship_name) {
 	console.log(relationship_name);
 	let serviceRelationship = getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == relationship_name);
+	if(! serviceRelationship)
+		return false;
 	putRelationship(serviceRelationship);
+	return true;
 }
 function updateRecipe(){
 	//this function will require the drag and drop feature.
@@ -292,6 +299,34 @@ function finalizeRecipe(){
 		var popup = document.querySelector('.popupRecipe');
 		popup.style.visibility = 'visible';
   	};
+
+	let recipe_layout = document.getElementById("recipeLayout");
+	let recipe_set = recipe_layout.getElementsByClassName("set");
+	console.log("recipe_set ", recipe_set[0], recipe_set.length);
+	for(let ele of recipe_set) {
+		let recipe_boxes = ele.getElementsByClassName("recipeBox");
+		let box_num = recipe_boxes.length;
+		if(box_num == 1) {
+			let name = recipe_boxes[0].innerHTML;
+			if(!putServiceToRecipe(name))
+				putRelationshipToRecipe(name);
+			//console.log("regular name ", name);
+		}
+		else {
+
+				let if_name = recipe_boxes[0].innerHTML;
+				let then_name = recipe_boxes[1].innerHTML;
+				let if_obj = getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == if_name);
+				if(! if_obj)
+					if_obj = getFilteredServices().find(service => service["Name"] == if_name);
+				let then_obj = getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == then_name);
+				if(! then_obj)
+					then_obj = getFilteredServices().find(service => service["Name"] == then_name);
+				putCondEval(new condEval(if_obj, then_obj));
+				//console.log("if name ", if_name, " then name ", then_name);
+
+		}
+	}
 
   	showPopup();
 }

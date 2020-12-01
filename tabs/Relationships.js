@@ -43,7 +43,6 @@ let servicesRelationship_list = null;
 const onload = () => {
     
     servicesRelationship_list = Relationship_list.map(relationship => new ServicesRelationship(relationship));
-    console.log("ssss", servicesRelationship_list);
 }
 
 /**
