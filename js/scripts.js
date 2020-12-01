@@ -59,8 +59,7 @@ function move() {
 			loadingBlockade.style.zIndex = "-1";
 		} else {
 			//Increment by 0.016666 every 10 milliseconds. This means the bar will fill after 60 seconds
-			//width += (0.05 / 3);
-			width += 1;
+			width += (0.05 / 3);
 			elem.style.width = width + "%";
 		}
 		}
@@ -144,7 +143,7 @@ function updateServices(){
 	services_display_html += '<br><br><h4>Services Available:</h4>';
 	const FilteredServices_list = getFilteredServices(things_id_to_display);
 	FilteredServices_list.forEach(service => {
-		services_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '</div>' + '<div style="display:inline-block">' + " &nbsp;belongs to " + service["Thing ID"] + '</div><br>';
+		services_display_html += '<div class="draggable" draggable="true" ondragstart="dragToRecipeTab(event)" ondragend="endDragToRecipeTab(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '</div>' + '<div style="display:inline-block">' + " &nbsp;belongs to " + service["Thing ID"] + '</div><br>';
 	});
 	elem.innerHTML = services_display_html;
 }
@@ -206,7 +205,7 @@ function updateRelationships(){
 
 	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
 	filteredServicesRelationship_list.forEach(servicesRelationship => {
-		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="drag(event)" style="font-weight: bold;">' +servicesRelationship.relationship["Name"] + '</div>';
+		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="dragToRecipeTab(event)" ondragend="endDragToRecipeTab(event)" style="font-weight: bold;">' +servicesRelationship.relationship["Name"] + '</div>';
 		let is_first_bounded = servicesRelationship.first_service.is_bounded ? "bounded" : "unbounded";
 		let is_second_bounded = servicesRelationship.second_service.is_bounded ? "bounded" : "unbounded";
 		let unbounded_service1_id = "unbounded_service_" + servicesRelationship.first_service.serviceName;
@@ -253,7 +252,6 @@ function putRelationshipToRecipe(relationship_name) {
 }
 function updateRecipe(){
 	//this function will require the drag and drop feature.
-
 }
 function callServices(app) {
 	//app = JSON.stringify(app);

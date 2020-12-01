@@ -71,8 +71,10 @@
   <div style="width: 40%; float: left">
     <button onclick="clearText()">Clear Recipe</button>
     <h3>Services</h3>
+    <p id="dragS">Drag services from the Services tab</p>
     <div id="servicesList"></div>
     <h3>Relationships</h3>
+    <p id="dragR">Drag relationships from the Relationships tab</p>
     <div id="relationshipsList"></div>
   </div>
   <div id="appRecipe" style="width: 60%; float: left">
@@ -385,6 +387,16 @@ function drag(ev) {
     ev.dataTransfer.setData("type", ev.target.id);
 }
 
+function dragToRecipeTab(ev) {
+    ev.dataTransfer.setData("text", ev.target.innerHTML);
+    ev.dataTransfer.setData("type", ev.target.id);
+    document.getElementById("recipeTab").style.backgroundColor = "yellow";
+}
+
+function endDragToRecipeTab(ev) {
+    document.getElementById("recipeTab").style.backgroundColor = "";
+}
+
 // add dragged text to recipe lists
 function drop(ev) {
     ev.preventDefault();
@@ -400,6 +412,8 @@ function drop(ev) {
         newDiv.addEventListener("dragstart", function(ev){drag(ev)}, false);
         newDiv.innerHTML = data;
         document.getElementById("servicesList").appendChild(newDiv);
+
+        document.getElementById("dragS").style.display = 'none';
     }
     if(document.getElementById("relationshipsTab").className == "tablinks active" && chosenRelationships.includes(data)==false){
         chosenRelationships.push(data);
@@ -412,6 +426,8 @@ function drop(ev) {
         newDiv.addEventListener("dragstart", function(ev){drag(ev)}, false);
         newDiv.innerHTML = data;
         document.getElementById("relationshipsList").appendChild(newDiv);
+
+        document.getElementById("dragR").style.display = 'none';
     }
 }
 
@@ -431,7 +447,12 @@ function clearText() {
     document.getElementById('servicesList').innerHTML = "";
     document.getElementById('relationshipsList').innerHTML = "";
     document.getElementById("box1").innerHTML = "RELATIONSHIP/SERVICE";
-    document.getElementById("box2").innerHTML = "RELATIONSHIP/SERVICE";
+    if (document.getElementById("box2") != null) {
+        document.getElementById("box2").innerHTML = "RELATIONSHIP/SERVICE";
+    }
+
+    document.getElementById("dragS").style.display = '';
+    document.getElementById("dragR").style.display = '';
 }
 </script>
 
