@@ -79,11 +79,15 @@
   </div>
   <div id="appRecipe" style="width: 60%; float: left">
     <button onclick="finalizeRecipe()">Finalize Recipe</button>
-    <input id="conditionalCheck" type="checkbox" onclick="switchLayout(event)" style="display:inline-block">Conditional Evaluation</input>
-      <div id="recipeLayout">
-        <h3>APP =</h3>
-        <div id="box1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP/SERVICE</div>
+    <h3>APP =</h3>
+    <div id="recipeLayout">
+      <div class="set">
+        <input id="conditionalCheck" type="checkbox" onclick="switchLayout(event)" style="display:inline-block">Conditional Evaluation</input>
+        <div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP/SERVICE</div>
+        <button onclick="deleteBox(event)">Delete</button>
       </div>
+    </div>
+    <button class="circlePlus" onclick="addBox(event)">+</button>
   </div>
   </div>
 
@@ -152,7 +156,7 @@
     </div>
     </body>
 
-    <style>
+<style>
 /* Style the tabs on the right side */
 .tablinks{
     border-radius: 12px;
@@ -318,25 +322,58 @@ body{
 .draggable {
   cursor: grab;
 }
+
+.circlePlus {
+  background-color: transparent;
+  border: 2px solid black;
+  border-radius: 50%;
+  margin-left: 102.5px;
+  margin-top: 10px;
+}
+
+.set {
+  width: 230px;
+  background-color: #dbdbdb;
+  text-align: center;
+  margin-bottom: 10px;
+}
 </style>
 
 <script>
-function switchLayout(ev){
-  if(document.getElementById("conditionalCheck").checked){
-    var box1Contents = document.getElementById("box1").innerHTML;
-    document.getElementById("recipeLayout").innerHTML = '<h3>APP =</h3>' +
-      '<h4>IF</h4>'+
-      '<div id="box1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+box1Contents+'</div>'+
-      '<h4>THEN</h4>'+
-      '<div id="box2" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP/SERVICE</div>';
-  }
-  else{
-    var box1Contents = document.getElementById("box1").innerHTML;
-    document.getElementById("recipeLayout").innerHTML = '<h3>APP =</h3>' +
-      '<div id="box1" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+box1Contents+'</div>';
-  }
+var boxCount = 1;
+function addBox(ev){
+  boxCount++;
+  document.getElementById("recipeLayout").innerHTML += 
+    '<div class="set">'+
+    '<input id="conditionalCheck" type="checkbox" onclick="switchLayout(event,1)" style="display:inline-block">Conditional Evaluation</input>'+
+    '<div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP/SERVICE</div>'+
+    '<button class="deleteButton" onclick="deleteBox(event)">Delete</button><br>'+
+    '</div>';
 }
 
+function deleteBox(ev){
+  boxCount--;
+  ev.target.parentElement.remove();
+}
+
+function switchLayout(ev, num){
+  var boxAContents = ev.target.parentNode.querySelectorAll(".recipeBox")[0].innerHTML;
+  if(ev.target.checked){
+    ev.target.parentElement.innerHTML =
+      '<input id="conditionalCheck" type="checkbox" onclick="switchLayout(event,1)" style="display:inline-block" checked>Conditional Evaluation</input>'+
+      '<div>IF</div>'+
+      '<div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+boxAContents+'</div>'+
+      '<div>THEN</div>'+
+      '<div class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP/SERVICE</div>'+
+      '<button class="deleteButton" onclick="deleteBox(event)">Delete</button>';
+  }
+  else{
+    ev.target.parentElement.innerHTML =
+      '<input id="conditionalCheck" type="checkbox" onclick="switchLayout(event,1)" style="display:inline-block">Conditional Evaluation</input>'+
+      '<div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+boxAContents+'</div>'+
+      '<button class="deleteButton" onclick="deleteBox(event)">Delete</button><br>';
+  }
+}
 
 function openTab(evt, id) {
     // Declare all variables
@@ -446,14 +483,18 @@ function clearText() {
     chosenRelationships = [];
     document.getElementById('servicesList').innerHTML = "";
     document.getElementById('relationshipsList').innerHTML = "";
-    document.getElementById("box1").innerHTML = "RELATIONSHIP/SERVICE";
-    if (document.getElementById("box2") != null) {
-        document.getElementById("box2").innerHTML = "RELATIONSHIP/SERVICE";
-    }
+    var allBoxes = document.getElementsByClassName("recipeBox");
+    document.getElementById("recipeLayout").innerHTML = 
+    '<div class="set">'+
+    '<input id="conditionalCheck" type="checkbox" onclick="switchLayout(event,1)" style="display:inline-block">Conditional Evaluation</input>'+
+    '<button class="deleteButton" onclick="deleteBox(event)">Delete</button><br>'+
+    '<div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">RELATIONSHIP/SERVICE</div>'+
+    '</div>';
+    boxCount = 0;
 
     document.getElementById("dragS").style.display = '';
     document.getElementById("dragR").style.display = '';
-}
+  }
 </script>
 
 
