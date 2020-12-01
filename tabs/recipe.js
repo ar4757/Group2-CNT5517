@@ -33,7 +33,7 @@ const condEval = function(condObj, evalObj) {
 
 function putCondEval(cond_eval) {
     recipe_list.push(cond_eval);
-    //console.log("putCondEval", recipe_list);
+    console.log("putCondEval", recipe_list);
 }
 
 

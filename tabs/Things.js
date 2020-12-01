@@ -12,7 +12,7 @@ let things_info_json = {};
 const getThingsInfo = () => {
     Identity_Thing_list.forEach(thing => {
         //if(thing["Space ID"] == "G2") {
-            things_info_json[thing["Thing ID"]] = "xxxx";
+            things_info_json[thing["Thing ID"]] = thing["Description"];
             console.log(thing);
         //}
     });

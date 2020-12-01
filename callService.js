@@ -65,7 +65,7 @@ const createClientForOneService = (service, input = null) =>
 		let buffer = Buffer.alloc(2048);
 		console.log(buffer.toString('utf8', 0, data));
 		let json = JSON.parse(data)
-		let result = json['Service Result'];
+		let result = parseInt(json['Service Result']);
 	});
 
 	client.on('close', function () {
@@ -90,7 +90,7 @@ const createClientForOneRelationship = (relationship) =>
 		var buffer = Buffer.alloc(2048);
 		console.log(buffer.toString('utf8', 0, data));
 		var json = JSON.parse(data)
-		let result = json['Service Result'];
+		let result = parseInt(json['Service Result']);
 		console.log("relatinship second service", second_service);
 		relationshipDelegator(relationship_type, result, isInSameSpace, createClientForOneService, second_service, null);
 
@@ -109,13 +109,13 @@ const createClientForOneRelationship = (relationship) =>
 
 const createClientForIfServiceThenService = (if_service, then_service) =>
 {
-	let client = writeMessage(if_service, input);
+	let client = writeMessage(if_service);
 	client.on('data', function (data) {
 		let buffer = Buffer.alloc(2048);
 		console.log(buffer.toString('utf8', 0, data));
 		let json = JSON.parse(data)
-		let result = json['Service Result'];
-		if(result == 1) {
+		let result = parseInt(json['Service Result']);
+		if(result) {
 			createClientForOneService(then_service, null);
 		}
 		//client.destroy(); // kill client after server's response
@@ -138,8 +138,9 @@ const createClientForIfServiceThenRelationship = (if_service, then_relationship)
 		var buffer = Buffer.alloc(2048);
 		console.log(buffer.toString('utf8', 0, data));
 		var json = JSON.parse(data)
-		let result = json['Service Result'];
-		if(result) {
+		let result = parseInt(json['Service Result']);
+		//console.log("IfServiceThenRelationship", result, typeof result);
+		if(result){
 			createClientForOneRelationship(then_relationship);
 		}
 
@@ -159,17 +160,17 @@ const createClientForIfServiceThenRelationship = (if_service, then_relationship)
 const createClientForIfRelationshipThenService = (if_relationship, then_service) =>
 {
 
-	let relationship_type = if_relationship.type;
+	let relationship_type = if_relationship.relationship["Type"];
 	let first_service = if_relationship.first_service.content;
 	let second_service = if_relationship.second_service.content;
 	let isInSameSpace = if_relationship["Space ID"] ==  if_relationship["Space ID"];
-	let client = writeMessage(service, "");
+	let client = writeMessage(first_service);
 
 	client.on('data', function (data) {
 		let buffer = Buffer.alloc(2048);
 		console.log(buffer.toString('utf8', 0, data));
 		let json = JSON.parse(data)
-		let result = json['Service Result'];
+		let result = parseInt(json['Service Result']);
 		relationshipDelegator(relationship_type, result, isInSameSpace, createClientForIfServiceThenService, second_service, then_service);
 
 		//client.destroy(); // kill client after server's response
@@ -188,17 +189,18 @@ const createClientForIfRelationshipThenService = (if_relationship, then_service)
 const createClientForIfRelationshipThenRelationship = (if_relationship, then_relationship) =>
 {
 
-	let relationship_type = if_relationship.type;
+	let relationship_type = if_relationship.relationship["Type"];
 	let first_service = if_relationship.first_service.content;
 	let second_service = if_relationship.second_service.content;
 	let isInSameSpace = first_service["Space ID"] ==  second_service["Space ID"];
-	let client = writeMessage(first_service, "");
+	let client = writeMessage(first_service);
 
 	client.on('data', function (data) {
 		let buffer = Buffer.alloc(2048);
 		console.log(buffer.toString('utf8', 0, data));
 		let json = JSON.parse(data)
-		let result = json['Service Result'];
+		let result = parseInt(json['Service Result'])
+		//console.log("createClientForIfRelationshipThenRelationship type", relationship_type);
 		relationshipDelegator(relationship_type, result, isInSameSpace, createClientForIfServiceThenRelationship, second_service, then_relationship);
 
 		//client.destroy(); // kill client after server's response
@@ -281,11 +283,12 @@ const runApp = (app)=> {
 		if(param.type == "servicesRelationship")
 			createClientForOneRelationship(param);
 		else if(param.type == "condEval") {
+			//console.log("is condeval*****************",param.condObj.type, param.evalObj.type);
 			if(param.condObj.type == "servicesRelationship" && param.evalObj.type == "servicesRelationship")
 				createClientForIfRelationshipThenRelationship(param.condObj, param.evalObj);
 			else if(param.condObj.type == "servicesRelationship")
 				createClientForIfRelationshipThenService(param.condObj, param.evalObj);
-			else if(param.evalObj == "servicesRelationship")
+			else if(param.evalObj.type == "servicesRelationship")
 				createClientForIfServiceThenRelationship(param.condObj, param.evalObj);
 			else
 				createClientForIfServiceThenService(param.condObj, param.evalObj);
