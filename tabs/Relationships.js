@@ -27,6 +27,7 @@ const ServicesRelationship = function(relationship_tweet) {
     this.second_service = matched_service2 != undefined ? new service(second_service_name, matched_service2, true) : new service(second_service_name);
     this.relationship = relationship_tweet;
     this.type = "servicesRelationship";
+    this.Name = relationship_tweet["Name"];
 };
 
 

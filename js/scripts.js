@@ -17,6 +17,8 @@ import {parse} from "./parseTweets.js";
 import {onload} from "../tabs/Relationships.js";
 import {dummy_tweets} from "../unit_test/dummyTweets.js";
 
+let current_app_list = [];
+
 //parse(dummy_tweets);
 //onload();
 function load() {
@@ -92,9 +94,12 @@ function updateApps(){
 				var subparagraph1 = document.createElement('p');
 				subparagraph1.innerHTML = key;
 				subparagraph1.className = "app-sub-paragraph";
+				//save recipe content here, so can use for editting later
+				console.log("updateapps", value);
+				subparagraph1.dataset.content = JSON.stringify(value);
 				paragraph.appendChild(subparagraph1);
 				var subparagraph2 = document.createElement('p');
-				subparagraph2.innerHTML = value;
+				subparagraph2.innerHTML = JSON.stringify(value);
 				subparagraph2.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph2);
 				var subparagraph3 = document.createElement('p');
@@ -105,7 +110,9 @@ function updateApps(){
 				var buttonGroupDiv = document.createElement('div');
 				buttonGroupDiv.className = "btn-group";
 				buttonGroupDiv.id = "app-btn-group";
+
 				var activateButton = document.createElement('button');
+
 				activateButton.onclick = function() { activateApp(this); }
 				activateButton.innerHTML = "Activate";
 				activateButton.className = "button";
@@ -115,6 +122,11 @@ function updateApps(){
 				deleteButton.innerHTML = "Delete";
 				deleteButton.className = "button";
 				buttonGroupDiv.appendChild(deleteButton);
+				var eidtButton = document.createElement('button');
+				eidtButton.onclick = function() { editApp(this); }
+				eidtButton.innerHTML = "Edit";
+				eidtButton.className = "button";
+				buttonGroupDiv.appendChild(eidtButton);
 				entry.appendChild(buttonGroupDiv);
 				entry.className = "list-entry";
 				appList.appendChild(entry);
@@ -137,7 +149,6 @@ function updateServices(){
 	//filter based on things
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
-		console.log("here1");
 		services_display_html += '<input type="checkbox" id="'+ thing_name +'" checked="true">' + 
 		'<label for="'+ thing_name + '">' + thing_name + '</label>';
 	});
@@ -155,7 +166,6 @@ function updateThings(){
 	var things_display_html = ""
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
-		console.log("here1");
 		things_display_html += '<div class="thing_info" style="font-weight: bold;">' +thing_name + '</div>' + '<div class="thing_info">' +
 		'description:' + things_info_json[thing_name] + '</div><br>';
 	});
@@ -195,7 +205,6 @@ function updateRelationships(){
 	//filter based on things
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
-		console.log("here1");
 		relationship_display_html += '<input type="checkbox" id="'+ thing_name +'" checked="true">' + 
 		'<label for="'+ thing_name + '">' + thing_name + '</label>';
 	});
@@ -241,7 +250,6 @@ function updateRelationships(){
 }
 
 function putServiceToRecipe(service_name) {
-	console.log(service_name);
 	let service = getFilteredServices().find(service => service["Name"] == service_name);
 	if(!service)
 		return false;
@@ -250,7 +258,6 @@ function putServiceToRecipe(service_name) {
 }
 
 function putRelationshipToRecipe(relationship_name) {
-	console.log(relationship_name);
 	let serviceRelationship = getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == relationship_name);
 	if(! serviceRelationship)
 		return false;
@@ -302,7 +309,6 @@ function finalizeRecipe(){
 
 	let recipe_layout = document.getElementById("recipeLayout");
 	let recipe_set = recipe_layout.getElementsByClassName("set");
-	console.log("recipe_set ", recipe_set[0], recipe_set.length);
 	for(let ele of recipe_set) {
 		let recipe_boxes = ele.getElementsByClassName("recipeBox");
 		let box_num = recipe_boxes.length;
@@ -368,6 +374,7 @@ function finishFinalizeRecipe(recipename){
 	var buttonGroupDiv = document.createElement('div');
 	buttonGroupDiv.className = "btn-group";
 	buttonGroupDiv.id = "app-btn-group";
+
 	var saveButton = document.createElement('button');
 	saveButton.onclick = function() { saveNewApp(this) };
 	saveButton.innerHTML = "Save";
@@ -383,6 +390,11 @@ function finishFinalizeRecipe(recipename){
 	deleteButton.innerHTML = "Delete";
 	deleteButton.className = "button";
 	buttonGroupDiv.appendChild(deleteButton);
+	var editButton = document.createElement('button');
+	editButton.onclick = function() { editApp(this) };
+	editButton.innerHTML = "Edit";
+	editButton.className = "button";
+	buttonGroupDiv.appendChild(editButton);
 	entry.appendChild(buttonGroupDiv);
 	entry.className = "list-entry";
 	recipeList.appendChild(entry);
@@ -516,7 +528,6 @@ function activateApp(button){
 	//use recipe_list as temporary test, should replace this with any app
 	var entry = button.parentNode.parentNode;
 	var recipeContent = entry.getElementsByClassName('app-sub-paragraph')[1].dataset.content;
-	console.log("recipeContent", recipeContent);
 	callServices(recipeContent);
 	//update display
 	activateAll(button);
@@ -601,6 +612,8 @@ function activateAll(button){
 	}
 }
 
+
+
 function stopApp(button){
 	//stop the currently selected app
 
@@ -660,6 +673,38 @@ function stopAll(button){
 	}
 }
 
+const addBoxForServiceOrRelation = (name) => {
+	return '<div class="set">'+
+		'<input id="conditionalCheck" type="checkbox" onclick="switchLayout(event,1)" style="display:inline-block">Conditional Evaluation</input>'+
+		'<div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+ name +'</div>'+
+		'<button class="deleteButton" onclick="deleteBox(event)">Delete</button><br>'+
+		'</div>';
+};
+
+const addBoxForConcEval = (if_name, then_name) => {
+	return '<div class="set">' + '<input id="conditionalCheck" type="checkbox" onclick="switchLayout(event,1)" style="display:inline-block" checked>Conditional Evaluation</input>'+
+	'<div>IF</div>'+
+	'<div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+if_name+'</div>'+
+	'<div>THEN</div>'+
+	'<div class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+ then_name + '</div>'+
+	'<button class="deleteButton" onclick="deleteBox(event)">Delete</button><br>' + '</div>';
+};
+
+function editApp(button) {
+	let entry = button.parentNode.parentNode;
+	let recipeContent = JSON.parse(entry.getElementsByClassName('app-sub-paragraph')[0].dataset.content);
+	let innerhtml = "";
+	console.log("recipeContent", recipeContent);
+	for(let obj of recipeContent) {
+		console.log("obj", obj);
+		if(obj.type == "condEval") {
+			innerhtml += addBoxForConcEval(obj.condObj.Name, obj.evalObj.Name);
+		}
+		else
+			innerhtml += addBoxForServiceOrRelation(obj.Name);
+	}
+	document.getElementById("recipeLayout").innerHTML = innerhtml;
+}
 
 window.move = move;
 window.updateApps = updateApps;

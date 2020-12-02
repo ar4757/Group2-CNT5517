@@ -85,7 +85,9 @@ app.get('/getApps', function(req, res) {
 			}
 			else {
 				console.log("Found file " + filename);
-				data[filename] = content;
+				console.log("file content is", JSON.parse(JSON.parse(content)));
+				//It seems that when saving app to the file, it over stringfys the object. so here we use double Json.Parse
+				data[filename] = JSON.parse(JSON.parse(content));
 			}
 		  });
 		});
@@ -95,6 +97,7 @@ app.get('/getApps', function(req, res) {
 	const fileFetchTime = 500;
 	setTimeout(function() {
 		console.log(data);
+		//console.log(JSON.parse(data));
 		res.json(data);
 	}, fileFetchTime);
 });
@@ -107,7 +110,7 @@ app.post('/saveApp', function(req, res) {
 		encoding: req.body.contentType
 	};
 
-	fs.writeFile(dirname + response.filename, response.data, [response.encoding], function(err) {
+	fs.writeFile(dirname + response.filename, JSON.stringify(response.data), function(err) {
 		if(err) {
 			return console.log(err);
 		}

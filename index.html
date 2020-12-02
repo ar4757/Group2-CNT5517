@@ -360,6 +360,7 @@ function switchLayout(ev, num){
   var boxAContents = ev.target.parentNode.querySelectorAll(".recipeBox")[0].innerHTML;
   if(ev.target.checked){
     ev.target.parentElement.innerHTML =
+
       '<input id="conditionalCheck" type="checkbox" onclick="switchLayout(event,1)" style="display:inline-block" checked>Conditional Evaluation</input>'+
       '<div>IF</div>'+
       '<div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+boxAContents+'</div>'+
