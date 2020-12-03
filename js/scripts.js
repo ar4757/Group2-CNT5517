@@ -98,8 +98,8 @@ function updateApps(){
 				console.log("updateapps", value);
 				paragraph.appendChild(subparagraph1);
 				var subparagraph2 = document.createElement('p');
-				subparagraph2.innerHTML = "App that calls " + JSON.parse(value).length + " service(s)";
-				subparagraph2.dataset.content = value;
+				subparagraph2.innerHTML = "App that calls " + value.length + " service(s)";
+				subparagraph2.dataset.content = JSON.stringify(value);
 				subparagraph2.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph2);
 				var subparagraph3 = document.createElement('p');
@@ -604,6 +604,7 @@ function activateAll(button){
 				else if (type == "app") {
 					var entryClone = entry.cloneNode(true);
 					var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+					btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
 					btnGroup.removeChild(btnGroup.getElementsByClassName('button')[1]);
 					var stopButton = btnGroup.getElementsByClassName('button')[0];
 					stopButton.onclick = function() { stopApp(stopButton); };
@@ -632,6 +633,7 @@ function activateAll(button){
 		else if (type == "app") {
 			var entryClone = entry.cloneNode(true);
 			var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+			btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
 			btnGroup.removeChild(btnGroup.getElementsByClassName('button')[1]);
 			var stopButton = btnGroup.getElementsByClassName('button')[0];
 			stopButton.onclick = function() { stopApp(stopButton); };
