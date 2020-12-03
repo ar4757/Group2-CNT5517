@@ -96,10 +96,10 @@ function updateApps(){
 				subparagraph1.className = "app-sub-paragraph";
 				//save recipe content here, so can use for editting later
 				console.log("updateapps", value);
-				subparagraph1.dataset.content = JSON.stringify(value);
 				paragraph.appendChild(subparagraph1);
 				var subparagraph2 = document.createElement('p');
-				subparagraph2.innerHTML = JSON.stringify(value);
+				subparagraph2.innerHTML = "App that calls " + JSON.parse(value).length + " service(s)";
+				subparagraph2.dataset.content = value;
 				subparagraph2.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph2);
 				var subparagraph3 = document.createElement('p');
@@ -549,7 +549,7 @@ function activateAll(button){
 			runningDisplay.innerHTML = "Active";
 
 			//toggle button to be a stop button
-			var btn = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[1];
+			var btn = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[0];
 			btn.onclick = function() { stopApp(btn) };
 			btn.innerHTML = "Stop";
 		}
@@ -633,7 +633,7 @@ function stopAll(button){
 			runningDisplay.innerHTML = "Inactive";
 
 			//toggle button to be a stop button
-			var btn = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[1];
+			var btn = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[0];
 			btn.onclick = function() { activateApp(btn) };
 			btn.innerHTML = "Activate";
 		}
