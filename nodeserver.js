@@ -16,6 +16,9 @@ app.use(cors());
 
 const runApp = require('./callService.js').runApp;
 
+app.use(express.json({limit: '50mb'}));
+app.use(express.json({limit: '50mb'}));
+
 app.post('/callServices', (req, res) => {
 	const app = req.body;
 	runApp(app);
@@ -65,12 +68,13 @@ app.listen(port, () => {
 });
 
 var dirname = 'apps/'
-
+var imagesDir = 'images/'
 app.get('/getApps', function(req, res) {
 	if (!fs.existsSync(dirname)){
 		fs.mkdirSync(dirname);
 	}
-
+	if(!fs.existsSync(imagesDir))
+		fs.mkdirSync(imagesDir);
 	var data = {};
 	fs.readdir(dirname, function(err, filenames) {
 		if (err) {
@@ -84,8 +88,6 @@ app.get('/getApps', function(req, res) {
 			  return;
 			}
 			else {
-				console.log("Found file " + filename);
-				console.log("file content is", JSON.parse(JSON.parse(content)));
 				//It seems that when saving app to the file, it over stringfys the object. so here we use double Json.Parse
 				data[filename] = JSON.parse(JSON.parse(content));
 			}
@@ -102,6 +104,51 @@ app.get('/getApps', function(req, res) {
 	}, fileFetchTime);
 });
 
+app.get('/getImages', function(res, res) {
+	var data = {};
+	fs.readdir('images/', function(err, filenames) {
+		if(err) {
+			console.log(err);
+			return;
+		}
+		filenames.forEach(function(filename){
+			fs.readFile('images/' + filename, 'utf-8', function(err, content) {
+				if(err) {
+					console.log(err);
+					return;
+				}
+				else{
+					data[filename] = content;
+				}
+			});
+		});
+	});
+
+	const fileFetchTime = 1000;
+	setTimeout(function() {
+		res.json(data);
+	}, fileFetchTime);
+});
+
+app.post('/saveImage', function(req,res) {
+	response = {
+		filename: req.body.filename,
+		data: req.body.content,
+		encoding: req.body.contentType
+	};
+
+	fs.writeFile('images/' + response.filename, JSON.stringify(response.data), function(err){
+		if(err){
+			return console.log(err);
+		}
+		else
+			return console.log("Saved image successfully");
+	})
+
+	console.log(dirname + 'images/' + response.filename);
+	res.end(JSON.stringify(response));
+});
+
 app.post('/saveApp', function(req, res) {
 
 	response = {
@@ -116,6 +163,7 @@ app.post('/saveApp', function(req, res) {
 		}
 		console.log("File saved successfully!");
 	})
+	console.log("save Apps called " + dirname + response.filename);
 	
 	//this line is optional and will print the response on the command prompt
 	//It's useful so that we know what infomration is being transferred 
@@ -163,4 +211,3 @@ app.post('/changeDirectory', function(req, res) {
 	//convert the response in JSON format
 	res.end(JSON.stringify(response));
 });
-
