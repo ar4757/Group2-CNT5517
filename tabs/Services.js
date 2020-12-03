@@ -19,7 +19,18 @@ let filtered_services_list = Services_list;
 
 const getFilteredServices = (things_id_to_display) => {
 
-    Services_list.forEach(service => {
+    //remove duplicate tweets
+    let obj = {};
+
+    for ( let i=0, len = filtered_services_list.length; i < len; i++ )
+        obj[filtered_services_list[i]['Name']] = filtered_services_list[i];
+
+    filtered_services_list = []
+    for ( let key in obj )
+        filtered_services_list.push(obj[key]);
+
+    //assign service with default input
+    filtered_services_list.forEach(service => {
         let firstComma = service.API.indexOf("[");
         let inputType = service.API.substr(firstComma + 1, service.API.indexOf("]") - firstComma - 1);
         if(inputType != "NULL") {
