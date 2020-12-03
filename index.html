@@ -4,7 +4,7 @@
     <head>
     <meta charset="utf-8">
 
-    <title>IOT IDE</title>
+    <title>IOT IDE TESTING JAMES</title>
 <meta name="description" content="IOT IDE">
     <meta name="author" content="Group2">
 
@@ -105,10 +105,13 @@
     </div>
 </div>
 
+
     <div id="Apps" class="tabcontent">
     <div class="w3-container w3-blue">
     <h3>Apps</h3>
     </div>
+  
+    <button id="toggleButton" onclick="toggleEdit()">Edit: True</button>
 
     <!--Set the directory to the current path. The contents of this directory
     need be made visual and accesible somewhere else.-->
@@ -151,10 +154,32 @@
         <p>Status List: </p>
         <ol id = "statusList">
         </ol>
+   </div>
+
+        <div class="imageContainer" ondragover="image_dragover_handler(event)" ondrop="image_drop_handler(event);saveImageToDir()">
+      <p>Drop or Upload Image</p>
+      <label for="imageUpload">Upload Image:</label>
+      <input type="file" id="imageUpload" accept="image/png, image/jpg">
+      <input type ="button" onclick="uploadImage();saveImageToDir()" value="Submit">
+      <ol id="imageList"></ol>
+    </div>
+
+        <div id="myModal" class="modal">
+
+      <!-- The Close Button -->
+      <span class="close" onclick="closeModal()">&times;</span>
+    
+      <!-- Modal Content (The Image) -->
+      <img class="modal-content" id="img01">
+    
+      <!-- Modal Caption (Image Text) -->
+      <div id="caption"></div>
+    
     </div>
 
     </div>
-    </body>
+
+</body>
 
 <style>
 /* Style the tabs on the right side */
@@ -189,8 +214,8 @@ body{
 }
 
 .available-recipe-list{
-    width:50%;
-    float:left;
+	widht:50%;
+	float:left;
 }
 
 .available-app-list{
@@ -206,8 +231,10 @@ body{
     padding-bottom: 20px;
     margin-bottom: 10px;
     border-style:solid;
-    width:400px;
-    height:200px;
+    display: block;
+    border-radius:5%;
+    height:300px;
+    width:300px;
 }
 
 .status-list-entry{
@@ -215,7 +242,7 @@ body{
     margin-bottom: 10px;
     border-style:solid;
     width:400px;
-    height:140px;
+    height:100px;
 }
 
 #app-btn-group{
@@ -337,9 +364,246 @@ body{
   text-align: center;
   margin-bottom: 10px;
 }
+
+.imageContainer {
+overflow:scroll;
+background: #666;
+height: 30%;
+width: 30%;
+color: #fff;
+text-align: center;
+border: 5px solid #444;
+border-radius: 5px;
+padding: 10px;
+margin: 1em 0;
+position: absolute;
+right:35%;
+top:100%;
+}
+
+#imageList{
+  position: relative;
+  align-content: center;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+#toggleButton{
+	position:absolute;
+	right:48%;
+}
 </style>
 
 <script>
+
+function toggleEdit(){
+	var button = document.getElementById("toggleButton");
+	if(button.innerHTML === "Edit: True"){
+		button.innerHTML = "Edit: False";
+	}
+
+	else{
+		button.innerHTML = "Edit: True";
+	}
+	var buttons = document.getElementsByTagName("button");
+	if(button.innerHTML === "Edit: True"){
+		for(var i = 0; i < buttons.length;i++){
+			if(buttons[i].innerHTML === "Activate"){
+				buttons[i].style.display = 'none';
+			}
+		}
+	}
+	else{
+		for(var i = 0; i < buttons.length;i++){
+			if(buttons[i].innerHTML === "Activate"){
+				buttons[i].style.display = 'block';
+			}
+		}
+	}
+}
+var autoNameImages = 0;
+var isRecentUpload = 1;
+//why am I not working?
+function image_dragover_handler(ev) {
+	ev.preventDefault();
+	console.log("Dragged over");
+}
+
+//can only save if image url is data
+function image_drop_handler(event){
+	event.preventDefault();
+	let file = event.dataTransfer.getData('text/plain');
+	var image = new Image();
+	var newImg = document.createElement('img');
+	newImg.src = file;
+	newImg.style.width = '30%';
+	newImg.style.height = 'auto';
+	newImg.style.display = 'inline-block';
+	newImg.setAttribute("onclick", "imageClick(event)");
+	newImg.name = autoNameImages.toString();
+	autoNameImages++;
+	var listElement = document.createElement('li');
+	listElement.appendChild(newImg);
+	var list = document.getElementById("imageList");
+	list.appendChild(listElement);
+}
+function uploadImage(){
+	var file = document.getElementById("imageUpload").files[0];
+	var img = new Image();
+	var reader = new FileReader();
+	reader.addEventListener("load", function(){
+		var newImg = document.createElement('img');
+		newImg.src = reader.result;
+		newImg.style.width = '30%';
+		newImg.style.height = '30%';
+		newImg.name = file.name;
+		newImg.style.display = 'inline-block';
+		newImg.style.cursor = 'pointer';
+		newImg.setAttribute("onclick", "imageClick(event)");
+		var listElement = document.createElement('li');
+		listElement.appendChild(newImg);
+		document.getElementById("imageList").appendChild(listElement);
+	}, false);
+	if(file){
+		reader.readAsDataURL(file);
+	}
+	isRecentUpload = 1;
+}
+//expand image to view from list
+function imageClick(event){
+	var img = event.srcElement.currentSrc;
+	document.getElementById("img01").src = img;
+	document.getElementById("myModal").style.display = 'block';
+}
+function closeModal(){
+	document.getElementById("myModal").style.display = 'none';
+}
+
+//fixme: hardcoded api address, need to dereference URL for dropped images. Ask group about CORS.
+function saveImageToDir(){
+	var container = document.getElementById("imageList");
+	var images = container.getElementsByTagName('li');
+	var recent = images[images.length -1].children[0];
+	const downloadToFile = (content, filename, contentType) =>{
+		var formData = {"content":content, "filename":filename, "contentType":contentType};
+		$.ajax({
+			type: 'POST',
+			url: 'http://192.168.0.9:3000/saveImage',
+			data:formData,
+			success: function(response){
+				console.log(response);
+			},
+			error:function(xhr, status,err){
+				console.log(err);
+			}
+		});
+	}
+	console.log(recent.src);
+	console.log(recent.name);
+	downloadToFile(recent.src, recent.name, 'image/jpg');
+}
+//hard coded url, move to scripts.js
+//refreshed on reload, as needed
+var imageCopies = {};
+function loadImages(){
+	console.log("Called load images");
+	console.log(Object.keys(imageCopies).length);
+	var listContainer = document.getElementById("imageList");
+	if(Object.keys(imageCopies).length === 0){
+		console.log("Images copies was empty");
+		$.ajax({
+			type: 'GET',
+			url: 'http://192.168.0.9:3000/getImages',
+			success: function(response){
+				for (const [key, value] of Object.entries(response)){ imageCopies[key] = value; var reader
+					imageCopies[key] = value;
+				}
+			},
+			error:function(xhr, status, err){
+				console.log(xhr.responseText);
+			}
+		});
+	}
+	else{
+		console.log("Image copies was not empty, did not call load");
+	}
+}
+
+function convertURIToImageData(URI){
+	var byteString = atob(dataURI.split(',')[1]);
+	var ab = new ArrayBuffer(bteString.length);
+	var ia = new Uint8Array(ab);
+	for(var i = 0; i < byteString.length;i++){
+		ia[i] = byteString.charCodeAt(i);
+	}
+	return new Blob([ab], {type:'image/jpg'});
+}
+
+
+//set interval here
+var timerHandler = setInterval(function(){
+        console.log("Called timer handler");
+        var statusList = document.getElementById('statusList');
+        if(statusList !== null){
+            var entries = statusList.getElementsByTagName('li');
+            for(var i = 0; i < entries.length;i++){
+                var paragraphs = entries[i].getElementsByClassName("app-sub-paragraph");
+                if(paragraphs[1].childNodes[0].nodeValue === "Active"){}
+                    //do nothing
+                else if(paragraphs[1].childNodes[0].nodeValue === "Inactive"){
+                    paragraphs[1].childNodes[0].nodeValue = "Inactive, 5:00";
+                }
+                else if(paragraphs[1].childNodes[0].nodeValue === "Inactive, 0:05"){
+                    statusList.removeChild(entries[i]);
+                }
+                else{
+                    var timeString = paragraphs[1].childNodes[0].nodeValue;
+                    var seconds = Number(timeString[10]) * 60 + Number(timeString[12]) * 10 + Number(timeString[13]);
+                    seconds = seconds -5;
+                    var remainingMinutes = Math.floor(seconds/60);
+                    var remainingSeconds = seconds - 60 * remainingMinutes;
+                    if(remainingSeconds < 10){
+                        paragraphs[1].childNodes[0].nodeValue = "Inactive, " + remainingMinutes.toString() + ":0" + remainingSeconds.toString();
+                    }
+                    else{
+                        paragraphs[1].childNodes[0].nodeValue = "Inactive, " + remainingMinutes.toString() + ":" + remainingSeconds.toString();
+                    }
+                }
+            }
+        }
+    }, 5000);
+
+
 var boxCount = 1;
 function addBox(ev){
   boxCount++;
@@ -360,7 +624,6 @@ function switchLayout(ev, num){
   var boxAContents = ev.target.parentNode.querySelectorAll(".recipeBox")[0].innerHTML;
   if(ev.target.checked){
     ev.target.parentElement.innerHTML =
-
       '<input id="conditionalCheck" type="checkbox" onclick="switchLayout(event,1)" style="display:inline-block" checked>Conditional Evaluation</input>'+
       '<div>IF</div>'+
       '<div id="boxA" class="recipeBox" ondrop="dropRecipe(event)" ondragover="allowDrop(event)">'+boxAContents+'</div>'+
@@ -497,5 +760,4 @@ function clearText() {
     document.getElementById("dragR").style.display = '';
   }
 </script>
-
 

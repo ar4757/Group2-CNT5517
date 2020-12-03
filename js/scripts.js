@@ -175,6 +175,7 @@ function updateThings(){
 }
 
 
+
 function bindService(sel) {
 	let bind_service_name = sel.options[sel.selectedIndex].text;
 	const bind_service = getFilteredServices().find(service => service["Name"] == bind_service_name);
@@ -425,11 +426,15 @@ function saveNewApp(button){
 
 function nameFile(){
 	//check that this name is valid
+	console.log("Reached nameFile()");
 	var filename = document.getElementById("fileText");
-	finishSaveNewApp(filename);
-	//else {
-	//	console.log("Invalid filename" + filename.value);
-	//}
+
+	if(filename.value.toString().split(" ").length ===1){
+		finishSaveNewApp(filename);
+	}
+	else{
+		alert("Error: Filename contains spaces");
+	}
 }
 
 function finishSaveNewApp(filename){
@@ -509,6 +514,27 @@ function deleteApp(button){
 		 //remove from list
 		 stopApp(button);
 		 button.parentNode.parentNode.parentNode.removeChild(button.parentNode.parentNode);
+
+		//check if file with same name is in any of the other lists.
+		var recipeListDiv = document.getElementById('recipeList');
+		var statusListDiv = document.getElementById('statusList');
+
+		var listOfRecipes = recipeListDiv.getElementsByTagName('li');
+		var listOfStatus = statusListDiv.getElementsByTagName('li');
+
+		for(var i = 0; i < listOfRecipes.length;i++){
+			var paragraphs = listOfRecipes[i].getElementsByClassName("app-sub-paragraph");
+			if(filename.value === paragraphs[0].innerHTML){
+				recipeListDiv.removeChild(listOfRecipes[i]);
+			}
+		}
+
+		for(var i = 0; i < listOfStatus.length;i++){
+			var paragraphs = listOfStatus[i].getElementsByClassName("app-sub-paragraph");
+			if(filename.value === paragraphs[0].innerHTML){
+				statusListDiv.removeChild(listOfStatus[i]);
+			}
+		}
 	   },
 		error: function(xhr, status, err) {
 		  console.log(xhr.responseText);
@@ -612,7 +638,123 @@ function activateAll(button){
 	}
 }
 
+var autoNameImages = 0;
+var isRecentUpload = 1;
+//why am I not working?
+function image_dragover_handler(ev) {
+	ev.preventDefault();
+	console.log("Dragged over");
+}
 
+//can only save if image url is data
+function image_drop_handler(event){
+	event.preventDefault();
+	let file = event.dataTransfer.getData('text/plain');
+	var image = new Image();
+	var newImg = document.createElement('img');
+	newImg.src = file;
+	newImg.style.width = '30%';
+	newImg.style.height = 'auto';
+	newImg.style.display = 'inline-block';
+	newImg.setAttribute("onclick", "imageClick(event)");
+	newImg.name = autoNameImages.toString();
+	autoNameImages++;
+	var listElement = document.createElement('li');
+	listElement.appendChild(newImg);
+	var list = document.getElementById("imageList");
+	list.appendChild(listElement);
+}
+function uploadImage(){
+	var file = document.getElementById("imageUpload").files[0];
+	var img = new Image();
+	var reader = new FileReader();
+	reader.addEventListener("load", function(){
+		var newImg = document.createElement('img');
+		newImg.src = reader.result;
+		newImg.style.width = '30%';
+		newImg.style.height = '30%';
+		newImg.name = file.name;
+		newImg.style.display = 'inline-block';
+		newImg.style.cursor = 'pointer';
+		newImg.setAttribute("onclick", "imageClick(event)");
+		var listElement = document.createElement('li');
+		listElement.appendChild(newImg);
+		document.getElementById("imageList").appendChild(listElement);
+	}, false);
+	if(file){
+		reader.readAsDataURL(file);
+	}
+	isRecentUpload = 1;
+}
+//expand image to view from list
+function imageClick(event){
+	var img = event.srcElement.currentSrc;
+	document.getElementById("img01").src = img;
+	document.getElementById("myModal").style.display = 'block';
+}
+function closeModal(){
+	document.getElementById("myModal").style.display = 'none';
+}
+
+//fixme: hardcoded api address, need to dereference URL for dropped images. Ask group about CORS.
+function saveImageToDir(){
+	var container = document.getElementById("imageList");
+	var images = container.getElementsByTagName('li');
+	var recent = images[images.length -1].children[0];
+	const downloadToFile = (content, filename, contentType) =>{
+		var formData = {"content":content, "filename":filename, "contentType":contentType};
+		$.ajax({
+			type: 'POST',
+			url: 'http://' + getHostIP() + '/saveImage',
+			data:formData,
+			success: function(response){
+				console.log(response);
+			},
+			error:function(xhr, status,err){
+				console.log(err);
+			}
+		});
+	}
+	console.log(recent.src);
+	console.log(recent.name);
+	downloadToFile(recent.src, recent.name, 'image/jpg');
+}
+//hard coded url, move to scripts.js
+//refreshed on reload, as needed
+var imageCopies = {};
+function loadImages(){
+	console.log("Called load images");
+	console.log(Object.keys(imageCopies).length);
+	var listContainer = document.getElementById("imageList");
+	if(Object.keys(imageCopies).length === 0){
+		console.log("Images copies was empty");
+		$.ajax({
+			type: 'GET',
+			url: 'http://' + getHostIP() +'/getImages',
+			success: function(response){
+				for (const [key, value] of Object.entries(response)){ imageCopies[key] = value; var reader
+					imageCopies[key] = value;
+				}
+			},
+			error:function(xhr, status, err){
+				console.log(xhr.responseText);
+			}
+		});
+	}
+	else{
+		console.log("Image copies was not empty, did not call load");
+	}
+}
+
+function convertURIToImageData(URI){
+	var byteString = atob(dataURI.split(',')[1]);
+	var ab = new ArrayBuffer(bteString.length);
+	var ia = new Uint8Array(ab);
+	for(var i = 0; i < byteString.length;i++){
+		ia[i] = byteString.charCodeAt(i);
+	}
+	return new Blob([ab], {type:'image/jpg'});
+}
 
 function stopApp(button){
 	//stop the currently selected app
@@ -726,5 +868,12 @@ window.nameFile = nameFile;
 window.nameRecipe = nameRecipe;
 window.callServices = callServices;
 window.bindService = bindService;
+window.image_drop_handler = image_drop_handler;
+window.uploadImage = uploadImage;
+window.imageClick = imageClick;
+window.closeModal  = closeModal;
+window.saveImageToDir = saveImageToDir;
+window.loadImages = loadImages;
+window.convertURIToImageData = convertURIToImageData;
 export {load}
 

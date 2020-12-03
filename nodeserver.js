@@ -164,3 +164,46 @@ app.post('/changeDirectory', function(req, res) {
 	res.end(JSON.stringify(response));
 });
 
+app.get('/getImages', function(res, res) {
+	var data = {};
+	fs.readdir('images/', function(err, filenames) {
+		if(err) {
+			console.log(err);
+			return;
+		}
+		filenames.forEach(function(filename){
+			fs.readFile('images/' + filename, 'utf-8', function(err, content) {
+				if(err) {
+					console.log(err);
+					return;
+				}
+				else{
+					data[filename] = content;
+				}
+			});
+		});
+	});
+
+	const fileFetchTime = 1000;
+	setTimeout(function() {
+		res.json(data);
+	}, fileFetchTime);
+});
+
+app.post('/saveImage', function(req,res) {
+	response = {
+		filename: req.body.filename,
+		data: req.body.content,
+		encoding: req.body.contentType
+	};
+
+	fs.writeFile('images/' + response.filename, JSON.stringify(response.data), function(err){
+		if(err){
+			return console.log(err);
+		}
+		else
+			return console.log("Saved image successfully");
+	})
+
+	res.end(JSON.stringify(response));
+});
