@@ -167,7 +167,7 @@ function updateThings(){
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
 		things_display_html += '<div class="thing_info" style="font-weight: bold;">' +thing_name + '</div>' + '<div class="thing_info">' +
-		'description:' + things_info_json[thing_name] + '</div><br>';
+		'description:&nbsp;' + things_info_json[thing_name] + '</div><br>';
 	});
 
 	elem.innerHTML = things_display_html;
