@@ -540,7 +540,7 @@ var statusList = document.getElementById('statusList');
 function activateAll(button){
 	var entry = button.parentNode.parentNode;
 	var key = entry.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
-
+	var type = "";
 	for (var i = 0, len = appList.getElementsByTagName('li').length; i < len; i++) {
 		//Found the corresponding entry in the list that matches the status entry
 		if (appList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
@@ -552,6 +552,8 @@ function activateAll(button){
 			var btn = appList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[0];
 			btn.onclick = function() { stopApp(btn) };
 			btn.innerHTML = "Stop";
+
+			type = "app";
 		}
 	}
 
@@ -566,6 +568,8 @@ function activateAll(button){
 			var btn = recipeList.getElementsByClassName('list-entry')[i].getElementsByClassName('btn-group')[0].getElementsByClassName('button')[1];
 			btn.onclick = function() { stopApp(btn) };
 			btn.innerHTML = "Stop";
+
+			type = "recipe";
 		}
 	}
 
@@ -585,30 +589,56 @@ function activateAll(button){
 			//Entry was not in status panel
 			else if (i == len - 1) {
 				//display in status panel
-				var entryClone = entry.cloneNode(true);
-				var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
-				btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
-				btnGroup.removeChild(btnGroup.getElementsByClassName('button')[0]);
-				var stopButton = btnGroup.getElementsByClassName('button')[0];
-				stopButton.onclick = function() { stopApp(stopButton); };
-				entryClone.className = 'status-list-entry';
-				entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
-				statusList.appendChild(entryClone);
+				if (type == "recipe") {
+					var entryClone = entry.cloneNode(true);
+					var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+					btnGroup.removeChild(btnGroup.getElementsByClassName('button')[3]);
+					btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
+					btnGroup.removeChild(btnGroup.getElementsByClassName('button')[0]);
+					var stopButton = btnGroup.getElementsByClassName('button')[0];
+					stopButton.onclick = function() { stopApp(stopButton); };
+					entryClone.className = 'status-list-entry';
+					entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+					statusList.appendChild(entryClone);
+				}
+				else if (type == "app") {
+					var entryClone = entry.cloneNode(true);
+					var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+					btnGroup.removeChild(btnGroup.getElementsByClassName('button')[1]);
+					var stopButton = btnGroup.getElementsByClassName('button')[0];
+					stopButton.onclick = function() { stopApp(stopButton); };
+					entryClone.className = 'status-list-entry';
+					entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+					statusList.appendChild(entryClone);
+				}
 			}
 		}
 	}
 	//Status list is empty when activating an app
 	else {
 		//display in status panel
-		var entryClone = entry.cloneNode(true);
-		var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
-		btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
-		btnGroup.removeChild(btnGroup.getElementsByClassName('button')[0]);
-		var stopButton = btnGroup.getElementsByClassName('button')[0];
-		stopButton.onclick = function() { stopApp(stopButton); };
-		entryClone.className = 'status-list-entry';
-		entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
-		statusList.appendChild(entryClone);
+		if (type == "recipe") {
+			var entryClone = entry.cloneNode(true);
+			var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+			btnGroup.removeChild(btnGroup.getElementsByClassName('button')[3]);
+			btnGroup.removeChild(btnGroup.getElementsByClassName('button')[2]);
+			btnGroup.removeChild(btnGroup.getElementsByClassName('button')[0]);
+			var stopButton = btnGroup.getElementsByClassName('button')[0];
+			stopButton.onclick = function() { stopApp(stopButton); };
+			entryClone.className = 'status-list-entry';
+			entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+			statusList.appendChild(entryClone);
+		}
+		else if (type == "app") {
+			var entryClone = entry.cloneNode(true);
+			var btnGroup = entryClone.getElementsByClassName('btn-group')[0];
+			btnGroup.removeChild(btnGroup.getElementsByClassName('button')[1]);
+			var stopButton = btnGroup.getElementsByClassName('button')[0];
+			stopButton.onclick = function() { stopApp(stopButton); };
+			entryClone.className = 'status-list-entry';
+			entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+			statusList.appendChild(entryClone);
+		}
 	}
 }
 
@@ -692,7 +722,7 @@ const addBoxForConcEval = (if_name, then_name) => {
 
 function editApp(button) {
 	let entry = button.parentNode.parentNode;
-	let recipeContent = JSON.parse(entry.getElementsByClassName('app-sub-paragraph')[0].dataset.content);
+	let recipeContent = JSON.parse(entry.getElementsByClassName('app-sub-paragraph')[1].dataset.content);
 	let innerhtml = "";
 	console.log("recipeContent", recipeContent);
 	for(let obj of recipeContent) {
