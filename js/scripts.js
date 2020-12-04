@@ -141,6 +141,34 @@ import {getThingsInfo} from "../tabs/Things.js";
 import {getFilteredServices} from "../tabs/Services.js";
 import {getFilteredServicesRelationship, bindServiceToUbounded} from "../tabs/Relationships.js";
 import {putRelationship, putService, recipe_list, condEval, putCondEval}  from "../tabs/recipe.js";
+
+function onSelectCheckBoxForServices(thing_id, ischecked) {
+	let things_id_to_display= [thing_id];
+	let services = getFilteredServices(things_id_to_display);
+	if(!ischecked)
+		for(let service of services) {
+			document.getElementById(service["Name"].replace(" ", "*")).style.visibility = 'hidden';
+		}
+	else
+		for(let service of services) {
+			document.getElementById(service["Name"].replace(" ", "*")).style.visibility = 'visible';
+		}
+}
+
+function onSelectCheckBoxForRelationshipServices(thing_id, ischecked) {
+	let things_id_to_display= [thing_id];
+	let servicesRelationships = getFilteredServicesRelationship(things_id_to_display);
+	if(!ischecked)
+		for(let sr of servicesRelationships) {
+			document.getElementById(sr.relationship["Name"].replace(" ", "*")).style.visibility = 'hidden';
+		}
+	else {
+		for(let servicesRelationship of servicesRelationships) {
+			document.getElementById(servicesRelationship.relationship["Name"].replace(" ", "*")).style.visibility = 'visible';
+		}
+	}
+}
+
 function updateServices(){
 	//will need to parse the Services_list object to get needed info.
 	var elem = document.getElementById("Services");
@@ -149,13 +177,13 @@ function updateServices(){
 	//filter based on things
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
-		services_display_html += '<input type="checkbox" id="'+ thing_name +'" checked="true">' + 
+		services_display_html += '<input class= "service_filter" type="checkbox" id="'+ thing_name +'" checked="true" onclick="onSelectCheckBoxForServices(this.id, this.checked);">' +
 		'<label for="'+ thing_name + '">' + thing_name + '</label>';
 	});
 	services_display_html += '<br><br><h4>Services Available:</h4>';
-	const FilteredServices_list = getFilteredServices(things_id_to_display);
+	const FilteredServices_list = getFilteredServices(things_info_json);
 	FilteredServices_list.forEach(service => {
-		services_display_html += '<div class="draggable" draggable="true" ondragstart="dragToRecipeTab(event)" ondragend="endDragToRecipeTab(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '</div>' + '<div style="display:inline-block">' + " &nbsp;belongs to " + service["Thing ID"] + '</div><br>';
+		services_display_html += '<div id =' + service["Name"].replace(" ", "*") +' ><div class="draggable" draggable="true" ondragstart="dragToRecipeTab(event)" ondragend="endDragToRecipeTab(event)" style="display:inline-block;font-weight: bold;">' +service["Name"] + '</div>' + '<div style="display:inline-block">' + " &nbsp;belongs to " + service["Thing ID"] + '</div><br> </div>';
 	});
 	elem.innerHTML = services_display_html;
 }
@@ -177,11 +205,11 @@ function updateThings(){
 
 function bindService(sel) {
 	let bind_service_name = sel.options[sel.selectedIndex].text;
-	const bind_service = getFilteredServices().find(service => service["Name"] == bind_service_name);
+	const bind_service = getFilteredServices(getThingsInfo()).find(service => service["Name"] == bind_service_name);
 	const unbounded_service_name = sel.id.substring("dropdown_".length);
 	
 	let unbounded_service = null;
-	for(const relationship of getFilteredServicesRelationship()) {
+	for(const relationship of getFilteredServicesRelationship(getThingsInfo())) {
 		if(relationship.first_service.origin_serviceName == unbounded_service_name) {
 			unbounded_service = relationship.first_service;
 			break;
@@ -192,7 +220,7 @@ function bindService(sel) {
 		}
 	}
 	bindServiceToUbounded(unbounded_service, bind_service);
-	let ele = document.getElementById('unbounded_service_' + unbounded_service_name);
+	let ele = document.getElementById('unbounded_service_' + unbounded_service_name.replace(" ","*"));
 	ele.innerHTML = ele.innerHTML.replace("unbounded", "bounded");
 	
 }
@@ -200,28 +228,28 @@ function bindService(sel) {
 function updateRelationships(){
 	var elem = document.getElementById("Relationships");
 	var relationship_display_html = "<h4>Filter based on:</h4>";
-	var things_id_to_display = null;
+	//var things_id_to_display = null;
 
 	//filter based on things
 	const things_info_json = getThingsInfo();
 	Object.keys(things_info_json).forEach(thing_name => {
-		relationship_display_html += '<input type="checkbox" id="'+ thing_name +'" checked="true">' + 
+		relationship_display_html += '<input type="checkbox" id="'+ thing_name +'" checked="true" onclick="onSelectCheckBoxForRelationshipServices(this.id, this.checked);">' +
 		'<label for="'+ thing_name + '">' + thing_name + '</label>';
 	});
 	relationship_display_html += '<br><br><h4>Relationships Available:</h4>';
 
 	// get services for drop down services
-	const FilteredServices_list = getFilteredServices(things_id_to_display);
+	const FilteredServices_list = getFilteredServices(things_info_json);
 
-	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_id_to_display);
+	const filteredServicesRelationship_list = getFilteredServicesRelationship(things_info_json);
 	filteredServicesRelationship_list.forEach(servicesRelationship => {
-		relationship_display_html += '<div class="draggable" draggable="true" ondragstart="dragToRecipeTab(event)" ondragend="endDragToRecipeTab(event)" style="font-weight: bold;">' +servicesRelationship.relationship["Name"] + '</div>';
+		relationship_display_html += '<div id='+ servicesRelationship.relationship["Name"].replace(" ", "*") + ' ><div class="draggable" draggable="true" ondragstart="dragToRecipeTab(event)" ondragend="endDragToRecipeTab(event)" style="font-weight: bold;">' +servicesRelationship.relationship["Name"] + '</div>';
 		let is_first_bounded = servicesRelationship.first_service.is_bounded ? "bounded" : "unbounded";
 		let is_second_bounded = servicesRelationship.second_service.is_bounded ? "bounded" : "unbounded";
-		let unbounded_service1_id = "unbounded_service_" + servicesRelationship.first_service.serviceName;
+		let unbounded_service1_id = "unbounded_service_" + servicesRelationship.first_service.serviceName.replace(" ", "*");
 		relationship_display_html += '<div id = ' + unbounded_service1_id +' style="display:inline-block;padding: 0px 5px;">' + "has " + servicesRelationship.first_service.serviceName + " " + is_first_bounded + " service" + '</div>';
 		if(!servicesRelationship.first_service.is_bounded){
-			let id = "dropdown_" + servicesRelationship.first_service.serviceName;
+			let id = "dropdown_" + servicesRelationship.first_service.serviceName.replace(" ", "*");
 			relationship_display_html += '<select id=' + id +' onChange="bindService(this);" style="display:inline-block"><option selected disabled hidden>Bind a service</option>';
 			FilteredServices_list.forEach(service => {
 				relationship_display_html += '<option value="'+service["Name"]+'">'+ service["Name"] + '</option>';
@@ -231,11 +259,11 @@ function updateRelationships(){
 		else{
 			relationship_display_html += '<br>'
 		}
-		let unbounded_service2_id = "unbounded_service_" + servicesRelationship.second_service.serviceName;
+		let unbounded_service2_id = "unbounded_service_" + servicesRelationship.second_service.serviceName.replace(" ", "*");
 
 		relationship_display_html += '<div id = ' + unbounded_service2_id +' style="display:inline-block;padding: 0px 5px;">' + "has " + servicesRelationship.second_service.serviceName +  " " + is_second_bounded +  " service" + '</div>';
 		if(!servicesRelationship.second_service.is_bounded){
-			let id = "dropdown_" + servicesRelationship.second_service.serviceName;
+			let id = "dropdown_" + servicesRelationship.second_service.serviceName.replace(" ", "*");
 			relationship_display_html += '<select id=' + id +' onChange="bindService(this);" style="display:inline-block"><option selected disabled hidden>Bind a service</option>';
 			FilteredServices_list.forEach(service => {
 				relationship_display_html += '<option value="'+service["Name"]+'">'+ service["Name"] + '</option>';
@@ -245,12 +273,13 @@ function updateRelationships(){
 		else{
 			relationship_display_html += '<br><br>'
 		}
+		relationship_display_html += '</div>'
 	});
 	elem.innerHTML = relationship_display_html;
 }
 
 function putServiceToRecipe(service_name) {
-	let service = getFilteredServices().find(service => service["Name"] == service_name);
+	let service = getFilteredServices(getThingsInfo()).find(service => service["Name"] == service_name);
 	if(!service)
 		return false;
 	putService(service);
@@ -258,7 +287,7 @@ function putServiceToRecipe(service_name) {
 }
 
 function putRelationshipToRecipe(relationship_name) {
-	let serviceRelationship = getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == relationship_name);
+	let serviceRelationship = getFilteredServicesRelationship(getThingsInfo()).find(servicesRelationship => servicesRelationship.relationship["Name"] == relationship_name);
 	if(! serviceRelationship)
 		return false;
 	putRelationship(serviceRelationship);
@@ -322,12 +351,12 @@ function finalizeRecipe(){
 
 				let if_name = recipe_boxes[0].innerHTML;
 				let then_name = recipe_boxes[1].innerHTML;
-				let if_obj = getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == if_name);
+				let if_obj = getFilteredServicesRelationship(getThingsInfo()).find(servicesRelationship => servicesRelationship.relationship["Name"] == if_name);
 				if(! if_obj)
-					if_obj = getFilteredServices().find(service => service["Name"] == if_name);
+					if_obj = getFilteredServices(getThingsInfo()).find(service => service["Name"] == if_name);
 				let then_obj = getFilteredServicesRelationship().find(servicesRelationship => servicesRelationship.relationship["Name"] == then_name);
 				if(! then_obj)
-					then_obj = getFilteredServices().find(service => service["Name"] == then_name);
+					then_obj = getFilteredServices(getThingsInfo()).find(service => service["Name"] == then_name);
 				putCondEval(new condEval(if_obj, then_obj));
 				//console.log("if name ", if_name, " then name ", then_name);
 
@@ -758,5 +787,7 @@ window.nameFile = nameFile;
 window.nameRecipe = nameRecipe;
 window.callServices = callServices;
 window.bindService = bindService;
+window.onSelectCheckBoxForServices = onSelectCheckBoxForServices;
+window.onSelectCheckBoxForRelationshipServices = onSelectCheckBoxForRelationshipServices;
 export {load}
 

@@ -19,6 +19,7 @@ let filtered_services_list = Services_list;
 
 const getFilteredServices = (things_id_to_display) => {
 
+    console.log("things_id_to_display", things_id_to_display);
     //remove duplicate tweets
     let obj = {};
 
@@ -44,11 +45,12 @@ const getFilteredServices = (things_id_to_display) => {
         }
     });
 
-    if(things_id_to_display == null) {
+    //if(things_id_to_display == null) {
         //console.log("filtered list", filtered_services_list);
-        return filtered_services_list;
-    }
-    filtered_services_list = Services_list.filter(service => things_id_to_display[service["Thing ID"]] > -1);
+       // return filtered_services_list;
+    //}
+
+    filtered_services_list = filtered_services_list.filter(service => things_id_to_display[service["Thing ID"]] != -1);
 
     return filtered_services_list;
 };

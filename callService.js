@@ -271,6 +271,7 @@ const createClient = (ip_addr, message, relationship_type = null, secondIp_addr 
 function makeMessage(thing_id, space_id, service_name, service_input) {
 	return "{ \"Tweet Type\" : \"Service call\", \"Thing ID\" : \"" + thing_id + "\", \"Space ID\" :\"" + space_id +"\", \"Service Name\" :\""+ service_name + "\", \"Service Inputs\" :\"(" + service_input + ")\" }";
 }
+
 function testRequestService() {
 	var message = "{ \"Tweet Type\" : \"Service call\", \"Thing ID\" : \"raspberry_pi_ar4757\", \"Space ID\" : \"MySmartSpace_ar4757\", \"Service Name\" : \"Digital_Sound\", \"Service Inputs\" : \"()\" }";
 	client.write(message);

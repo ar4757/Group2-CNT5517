@@ -52,9 +52,19 @@ const onload = () => {
  * @returns {list} a list of ServicesRelationship instances that will be displayed under Relationships tab
  */
 const getFilteredServicesRelationship = (things_id_to_display = null) => {
-    if(!things_id_to_display)
-        return servicesRelationship_list;
-    return servicesRelationship_list.filter(servicesRelationship => things_id_to_display[servicesRelationship.relationship["Thing ID"]] > -1);
+    //remove duplicate tweets
+    let obj = {};
+
+    for ( let i=0, len = servicesRelationship_list.length; i < len; i++ )
+        obj[servicesRelationship_list[i]['Name']] = servicesRelationship_list[i];
+
+    servicesRelationship_list = []
+    for ( let key in obj )
+        servicesRelationship_list.push(obj[key]);
+    //if(!things_id_to_display)
+       // return servicesRelationship_list;
+   return servicesRelationship_list.filter(servicesRelationship => things_id_to_display[servicesRelationship.relationship["Thing ID"]] != -1);
+   //return servicesRelationship_list.filter(servicesRelationship => servicesRelationship.relationship["Space ID"].indexOf("G2") != -1);
 };
 
 export {getFilteredServicesRelationship, onload, bindServiceToUbounded};
