@@ -17,6 +17,7 @@ const writeMessage = (service) => {
 			}
 		);
 	}
+	console.log("***************************************\nstart calling service", service["Name"], "with input", service["Input"].length != 0 ? service["Input"]:"None", "\n**************************");
 	client.write(message);
 	return client;
 };
@@ -69,6 +70,7 @@ const createClientForOneService = (service, input = null) =>
 	});
 
 	client.on('close', function () {
+		console.log("***************************************\n","finishes calling service ", service["Name"],"\n***************************************");
 		console.log('Connection closed');
 	});
 
@@ -277,26 +279,44 @@ function testRequestService() {
 	client.write(message);
 }
 
-
-
 const runApp = (app)=> {
-	app.forEach(param => {
-		if(param.type == "servicesRelationship")
-			createClientForOneRelationship(param);
-		else if(param.type == "condEval") {
-			//console.log("is condeval*****************",param.condObj.type, param.evalObj.type);
-			if(param.condObj.type == "servicesRelationship" && param.evalObj.type == "servicesRelationship")
-				createClientForIfRelationshipThenRelationship(param.condObj, param.evalObj);
-			else if(param.condObj.type == "servicesRelationship")
-				createClientForIfRelationshipThenService(param.condObj, param.evalObj);
-			else if(param.evalObj.type == "servicesRelationship")
-				createClientForIfServiceThenRelationship(param.condObj, param.evalObj);
-			else
-				createClientForIfServiceThenService(param.condObj, param.evalObj);
-		}
+	runService(app, 0);
+}
+
+//use settimeout to avoid blocking Node.js event loop so we can receive stopApp api call
+function runService(app, index) {
+	//If the app has been stopped, simply return
+	if(app.length <= index) {
+		console.log("app stopped successfully");
+		return;
+	}
+	let param = app[index];
+	if("AppName" in param) {
+		let next = runService.bind(null, app, index + 1);
+		setTimeout(next, 1000);
+		return;
+	}
+
+	if(param.type == "servicesRelationship")
+		createClientForOneRelationship(param);
+	else if(param.type == "condEval") {
+		//console.log("is condeval*****************",param.condObj.type, param.evalObj.type);
+		if(param.condObj.type == "servicesRelationship" && param.evalObj.type == "servicesRelationship")
+			createClientForIfRelationshipThenRelationship(param.condObj, param.evalObj);
+		else if(param.condObj.type == "servicesRelationship")
+			createClientForIfRelationshipThenService(param.condObj, param.evalObj);
+		else if(param.evalObj.type == "servicesRelationship")
+			createClientForIfServiceThenRelationship(param.condObj, param.evalObj);
 		else
-			createClientForOneService(param);
-	});
-};
+			createClientForIfServiceThenService(param.condObj, param.evalObj);
+	}
+	else
+		createClientForOneService(param);
+	//execute tne next thing in this app
+	let next = runService.bind(null, app, index + 1);
+	setTimeout(next, 1000);
+}
+
+
 
 exports.runApp = runApp;

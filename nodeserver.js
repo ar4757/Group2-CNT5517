@@ -15,10 +15,23 @@ var cors = require('cors');
 app.use(cors());
 
 const runApp = require('./callService.js').runApp;
-
+let app_list = [];
 app.post('/callServices', (req, res) => {
 	const app = req.body;
+	app_list.push(app);
 	runApp(app);
+	res.send('okay');
+});
+
+app.post('/stopApp', (req, res) => {
+	const app_name = req.body;
+	//Set this app to empty
+	app_list.forEach((app, index, arr) => {
+		if(app.find(x => x && 'AppName' in x) && app.find(x => x && 'AppName' in x)["AppName"] == app_name["AppName"]) {
+			arr[index].length = 0;
+			//arr.splice(index, 1);
+		}
+	});
 	res.send('okay');
 });
 

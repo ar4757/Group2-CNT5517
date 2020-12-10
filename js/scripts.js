@@ -10,8 +10,6 @@ services and relationships into the current app.
 5. Link buttons with their functions, this is done for some buttons already.
 6. Add clear operation for the recipes tab.
 7. Add images?
-
-
 */
 import {parse} from "./parseTweets.js";
 import {onload} from "../tabs/Relationships.js";
@@ -98,7 +96,7 @@ function updateApps(){
 				console.log("updateapps", value);
 				paragraph.appendChild(subparagraph1);
 				var subparagraph2 = document.createElement('p');
-				subparagraph2.innerHTML = "App that calls " + value.length + " service(s)";
+				subparagraph2.innerHTML = "App that calls " + (value.length - 1) + " service(s)";
 				subparagraph2.dataset.content = JSON.stringify(value);
 				subparagraph2.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph2);
@@ -379,7 +377,8 @@ function finishFinalizeRecipe(recipename){
 	var key = recipename;
 
 	//Placeholder - replace with the recipe content (services to be called)
-	const recipeContent = JSON.stringify(recipe_list);
+	let recipeContent = JSON.stringify(recipe_list);
+	recipeContent =recipeContent.substr(0, recipeContent.length - 1) + ', {\"AppName\":\"'+ recipename +'\"}]';
 	var value = recipeContent;
 	console.log("Recipe content is " + recipeContent);
 	var recipeList = document.getElementById("recipeList");
@@ -391,7 +390,7 @@ function finishFinalizeRecipe(recipename){
 	subparagraph1.className = "app-sub-paragraph";
 	paragraph.appendChild(subparagraph1);
 	var subparagraph2 = document.createElement('p');
-	subparagraph2.innerHTML = "App that calls " + JSON.parse(value).length + " service(s)";
+	subparagraph2.innerHTML = "App that calls " + (JSON.parse(value).length -1) + " service(s)";
 	subparagraph2.dataset.content = value;
 	subparagraph2.className = "app-sub-paragraph";
 	paragraph.appendChild(subparagraph2);
@@ -482,7 +481,7 @@ function finishSaveNewApp(filename){
 				subparagraph1.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph1);
 				var subparagraph2 = document.createElement('p');
-				subparagraph2.innerHTML = "App that calls " + JSON.parse(value).length + " service(s)";
+				subparagraph2.innerHTML = "App that calls " + (JSON.parse(value).length -1) + " service(s)";
 				subparagraph2.dataset.content = value;
 				subparagraph2.className = "app-sub-paragraph";
 				paragraph.appendChild(subparagraph2);
@@ -557,6 +556,8 @@ function activateApp(button){
 	//use recipe_list as temporary test, should replace this with any app
 	var entry = button.parentNode.parentNode;
 	var recipeContent = entry.getElementsByClassName('app-sub-paragraph')[1].dataset.content;
+	console.log(559, entry);
+	//recipe_list = recipeContent;
 	callServices(recipeContent);
 	//update display
 	activateAll(button);
@@ -569,6 +570,7 @@ var statusList = document.getElementById('statusList');
 function activateAll(button){
 	var entry = button.parentNode.parentNode;
 	var key = entry.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
+	var recipeContent = entry.getElementsByClassName('app-sub-paragraph')[1].dataset.content;
 	var type = "";
 	for (var i = 0, len = appList.getElementsByTagName('li').length; i < len; i++) {
 		//Found the corresponding entry in the list that matches the status entry
@@ -628,6 +630,7 @@ function activateAll(button){
 					stopButton.onclick = function() { stopApp(stopButton); };
 					entryClone.className = 'status-list-entry';
 					entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+					entryClone.getElementsByClassName('app-sub-paragraph')[1].dataset.content = recipeContent;
 					statusList.appendChild(entryClone);
 				}
 				else if (type == "app") {
@@ -639,6 +642,7 @@ function activateAll(button){
 					stopButton.onclick = function() { stopApp(stopButton); };
 					entryClone.className = 'status-list-entry';
 					entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+					entryClone.getElementsByClassName('app-sub-paragraph')[1].dataset.content = recipeContent;
 					statusList.appendChild(entryClone);
 				}
 			}
@@ -657,6 +661,7 @@ function activateAll(button){
 			stopButton.onclick = function() { stopApp(stopButton); };
 			entryClone.className = 'status-list-entry';
 			entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+			entryClone.getElementsByClassName('app-sub-paragraph')[1].dataset.content = recipeContent;
 			statusList.appendChild(entryClone);
 		}
 		else if (type == "app") {
@@ -668,12 +673,28 @@ function activateAll(button){
 			stopButton.onclick = function() { stopApp(stopButton); };
 			entryClone.className = 'status-list-entry';
 			entryClone.getElementsByClassName('app-paragraph')[0].removeChild(entryClone.getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[1]);
+			entryClone.getElementsByClassName('app-sub-paragraph')[1].dataset.content = recipeContent;
 			statusList.appendChild(entryClone);
 		}
 	}
 }
 
-
+function stopAppByName(app_name) {
+	//app = JSON.stringify(app);
+	console.log("stopApp: " + app_name);
+	$.ajax({
+		type: 'POST',
+		url: 'http://' + getHostIP() + ':3000/stopApp',
+		data: JSON.stringify({"AppName" : app_name}),
+		contentType: 'application/json',
+		success: function(response) {
+			console.log("stopApp request finished");
+		},
+		error: function(xhr, status, err) {
+			console.log(xhr.responseText);
+		}
+	});
+}
 
 function stopApp(button){
 	//stop the currently selected app
@@ -685,7 +706,8 @@ function stopApp(button){
 function stopAll(button){
 	var entry = button.parentNode.parentNode;
 	var key = entry.getElementsByClassName('app-sub-paragraph')[0].innerHTML;
-
+	stopAppByName(key);
+	console.log(703, key);
 	for (var i = 0, len = appList.getElementsByTagName('li').length; i < len; i++) {
 		//Found the corresponding entry in the list that matches the status entry
 		if (appList.getElementsByClassName('list-entry')[i].getElementsByClassName('app-paragraph')[0].getElementsByClassName('app-sub-paragraph')[0].innerHTML == key) {
@@ -757,6 +779,8 @@ function editApp(button) {
 	let innerhtml = "";
 	console.log("recipeContent", recipeContent);
 	for(let obj of recipeContent) {
+		if("AppName" in obj)
+			continue;
 		console.log("obj", obj);
 		if(obj.type == "condEval") {
 			innerhtml += addBoxForConcEval(obj.condObj.Name, obj.evalObj.Name);
